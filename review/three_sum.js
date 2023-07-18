@@ -84,7 +84,7 @@ Pseudocode:
             3. While (l < r && number at l is the same as number at l - 1), increment l. This guarantees the next triplet we check will not be a duplicate of the one we just put into the answer array
 3. Return the answer array
 
-Time complexity: O(n log n) - logn since we're sorting the nums array, and n since we're iterating over the nums array once, and at each iteration, using pointers to iterate over the rest of the array, which decreases at each iteration.
+Time complexity: O(n^2) - logn since we're sorting the nums array, and n since we're iterating over the nums array once, and at each iteration, using pointers to iterate over the rest of the array, that'd simplify to n^2 as the highest order of magnitude time complexity operation. Overall it simplifies to O(n^2).
 
 Space complexity: O(1) - since we're only using pointers and the answer array for space
 
