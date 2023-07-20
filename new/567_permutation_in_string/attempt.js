@@ -108,3 +108,60 @@ var checkInclusion = function(s1, s2) {
 };
 
 // Failed: Test 63: Test case s1 = "a" s2 = "ab"
+
+
+/* SECOND ATTEMPT */
+
+/**
+ * @param {string} s1
+ * @param {string} s2
+ * @return {boolean}
+
+            l
+0 1 2 3 4 5 6 7 8
+e i d b a o o o
+
+ */
+var checkInclusion = function(s1, s2) {
+  let l = 0;
+  let r = s1.length - 1;
+
+  // 1. create a letter count map of s1
+  const s1Count = {};
+
+  for (char of s1) {
+      s1Count[char] ? s1Count[char] += 1 : s1Count[char] = 1;
+  }
+
+  while (l < (s2.length - s1.length + 1)) { // 8 - 2 + 1 = 7
+      // 2. Iterate over from l to r, create a count map
+      const windowCount = {};
+      for (i = l; i <= r; i += 1) {
+          windowCount[s2[i]] ? windowCount[s2[i]] += 1 : windowCount[s2[i]] = 1;
+      }
+
+      // 3 Compare s1Count and windowCount
+      // {'a': 1, 'b': 1}
+      // {'e': 1, 'i': 1}
+      let allLettersMatch = true;
+      const windowLetters = Object.keys(windowCount); // ['e', 'i']
+      for (letter of windowLetters) {
+          if (!s1Count[letter] || s1Count[letter] !== windowCount[letter]) { // if the letter doesn't exist in s1, or if the amount of the letter doesn't match the amount in s1, it isn't a permutation, increment l and r, and break out of the loop
+              l += 1;
+              r += 1;
+              allLettersMatch = false;
+              break;
+          }
+      }
+      // if allLettersMatch is still true, that means you went through all letters in windowLetters, and they 1) existed in the s1Count map, and 2) existed in the same amount in the s1Count map and the windowCount map
+      if (allLettersMatch) {
+          return true;
+      }
+  }
+  // if you finish the above while loop without returning true, you never found a window with exact matching letters, so return false
+  return false;
+};
+
+// Succeeded, but is slow:
+// Runtime = 2891 ms, beats 19.39% of users
+// Memory = 117.61 mb, beats 5.07% of users
