@@ -40,14 +40,17 @@ Space complexity: O(1) - Since we only use pointers
 
 // 4 -> 3 -> 2 -> 1 -> null
 
-function reverseList(head: ListNode | null): ListNode | null {
+
+// Iterative:
+
+function reverseList(head) {
     if (!head) return null;
     let currentNode = head;
     let tempNext = null;
 
 
     while (currentNode.next) {
-        let originalNext = currentNode.next; // store the next node
+    let originalNext = currentNode.next; // store the next node
         currentNode.next = tempNext; // set the next node to be the previous node stored in tempNext (or null)
         tempNext = currentNode; // set the tempNext variable to be the current node
         currentNode = originalNext; // set the current node to be the original next node
@@ -56,3 +59,5 @@ function reverseList(head: ListNode | null): ListNode | null {
     currentNode.next = tempNext;
     return currentNode;
 };
+
+// Recursive:

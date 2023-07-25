@@ -1,3 +1,5 @@
+// Iterative:
+
 function reverseList(head) {
   let curr = head;
   let prev = null;
@@ -11,3 +13,6 @@ function reverseList(head) {
 
   return prev;
 };
+
+
+// Recursive:
