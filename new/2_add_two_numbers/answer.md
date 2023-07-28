@@ -2,6 +2,19 @@ Time to Complete: 30m
 
 Method: The question is fairly straightforward, so the method is a systematic approach. First, reverse the two given linked lists, then traverse each one, and store its value in a string, concatenating the strings as you traverse the reversed linked lists. Then, convert both strings into numbers, add them together, and store that result in a string. Then, traverse that string backwards twice: on the first pass, create a hashmap that holds the index as the key, and creates new ListNodes as the values with the corresponding number at that index as the value. On the second pass, set the node at each index to point at the node at the index - 1. Finally, return the node at the sum's final index (the head). This question is good practice for manipulating, traversing, reversing, and creating linked lists.
 
+Neetcode's Method: Instead of creating the first number from the first node list, then creating the second number from the second node list, then adding those numbers together, then iterating over a string of the answer using an index and hashmap to create nodes, you can just iterate through the list and add the nodes up at each place, then create a node (which will be the answer node) with the sum of those two nodes as the value, making sure to remember carry-over numbers. This works because the lists l1 and l2 are in reverse order, so you start at the 1's place. For example:
+
+(1) -> (2) -> (3) is the number 321
+(2) -> (3) is the number 32
+
+When adding 321 and 32, it looks like this:
+
+    321
+  +  32
+    ---
+
+And in regular mathematical addition, you add 1 and 2 first, which are the nodes you start at in l1 and l2 node lists.
+
 Pseudocode:
 /*
 
@@ -52,6 +65,24 @@ Pseudocode:
 // Return the head of the new list stored in the hashmap
 17. Return map[sum.length - 1]
 
+*/
+
+Neetcode's Pseudocode:
+
+/*
+1. Instantiate a dummy node that's an empty ListNode
+2. Instantiate a curr at the value dummy
+3. Instantiate a carry variable at 0
+4. while l1 or l2 or carry are truthy
+    1. Instantiate a val1 variable that is l1.val if l1 is truthy, and 0 if l1 is not truthy (l1 is null)
+    2. Instantiate a val2 variable that is l2.val if l2 is truthy, and 0 if l2 is not truthy (l2 is null)
+    3. Add val1 and val2 together along with the carry: val1 + val2 + carry
+    4. Set the carry to be the sum of the above step integer divided by 10 (anything above 10 needs its 10s place to be stored in the carry for the next digit, think elementary school math addition, you carry the 1 over to the next largest 10s place)
+    5. Set the sum to actually be val % 10 (the value is whatever is left over after carrying the 10s digit)
+    6. Set curr.next to be a new ListNode(sum), with the sum as the value
+    7. Increment l1, or if you're at the last l1 node, set l1 to null
+    8. Increment l2, or if you're at the last l2 node, set l2 to null
+5. Return dummy.next
 */
 
 Code:
@@ -105,6 +136,31 @@ while (indexPointer >= 0) {
 }
 
 return answerMap[sum.length - 1];
+};
+```
+
+Neetcode code:
+```js
+function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+    let dummy = new ListNode();
+    let curr = dummy;
+    let carry = 0;
+
+    while (l1 || l2 || carry) {
+        let val1 = l1 ? l1.val : 0;
+        let val2 = l2 ? l2.val : 0;
+
+        let sum = val1 + val2 + carry;
+        carry = Math.floor(sum / 10);
+        sum = sum % 10;
+        curr.next = new ListNode(sum);
+
+        curr = curr.next;
+        l1 = l1 ? l1.next : null;
+        l2 = l2 ? l2.next : null;
+    }
+
+    return dummy.next;
 };
 ```
 
