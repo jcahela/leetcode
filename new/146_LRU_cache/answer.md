@@ -25,11 +25,11 @@ Pseudocode:
 Code:
 
 ```ts
-class Node {
-    prev: Node | null;
-    next: Node | null;
+class MyNode {
     key: number;
     val: number;
+    prev: MyNode | null;
+    next: MyNode | null;
 
     constructor(key: number, val: number) {
         this.key = key;
@@ -42,34 +42,78 @@ class Node {
 class LRUCache {
     capacity: number;
     cache: object;
-    left: Node;
-    right: Node;
+    left: MyNode;
+    right: MyNode;
 
     constructor(capacity: number) {
         this.capacity = capacity;
         this.cache = {};
-        // the LRUCache left node points at the least recently used node
-        this.left = new Node(0,0);
-        // the LRUCache right node points at the most recently used node
-        this.right = new Node(0,0);
+        // the LRUCache left MyNode points at the least recently used MyNode
+        this.left = new MyNode(0,0);
+        // the LRUCache right MyNode points at the most recently used MyNode
+        this.right = new MyNode(0,0);
         this.left.next = this.right;
         this.right.prev = this.left;
     }
 
-    get(key: number): number {
+    // Add two helper fuctions, remove and insert, to clean up and separate responsibilities, easier to implement
+    remove(node: MyNode) {
+        const left = node.prev;
+        const right = node.next;
+        left.next = right;
+        right.prev = left;
+    }
 
+    insert(node: MyNode) {
+        const left = this.right.prev;
+        const right = this.right;
+        left.next = node;
+        right.prev = node;
+        node.prev = left;
+        node.next = right;
+    }
+
+    get(key: number): number {
+        // retrieve the node at the given key
+        if (this.cache[key]) {
+            // remove the node from the left
+            this.remove(this.cache[key]);
+            // insert the node into the rightmost of the list between the right pointer and its previous node
+            this.insert(this.cache[key]);
+            // return the value at that node
+            return this.cache[key].val;
+        } else {
+            return -1;
+        }
     }
 
     put(key: number, value: number): void {
-        this.cache[key] = new Node(key, value);
-        let prev = this.right.prev;
+        // if the key exists in the cache already, remove the node from the list
+        if (this.cache[key]) {
+            this.remove(this.cache[key]);
+        }
+        // then, create a new node
+        const newNode = new MyNode(key, value);
+        // then, point the key in the cache to the new node
+        this.cache[key] = newNode;
+        // then, insert the node to the right (most recently used)
+        this.insert(newNode);
+        // check capacity:
+        // if the length of the keys in the cache exceeds capacity, remove the left most node
+        if (Object.keys(this.cache).length > this.capacity) {
+            // remove the node from the list
+            const lru = this.left.next;
+            this.remove(lru);
+            // remove the key of that node from the cache
+            delete this.cache[lru.key];
+        }
     }
 }
 ```
 
 
-Time Complexity:
-Explanation:
+Time Complexity: O(n)
+Explanation: Since every operation is O(1), I run through the given inputs n and perform n many operations
 
-Space:
-Explanation:
+Space: O(c)
+Explanation: Where c is the capacity of the LRUCache object. Since I'm only holding that many keys in my cache hashmap and that many nodes in my node list which keeps track of the least recently used and most recently used sides
