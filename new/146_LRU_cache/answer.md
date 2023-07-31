@@ -4,23 +4,80 @@ Method: This is more a design problem than an algorithm problem. The best way to
 
 The nodes will look like this:
 
-class ListNode {
-  key: number
-  val: number
-  next: ListNode | null
-  prev: ListNode | null
-  constructor(key?: number, val?: number, prev?: ListNode | null, next?: ListNode | null) {
-    this.key = (key===undefined ? 0 : key)
-    this.val = (val===undefined ? 0 : val)
-    this.prev = (prev===undefined ? null : prev)
-    this.next = (next===undefined ? null : next)
-  }
+/*
+class MyNode {
+    key: number;
+    val: number;
+    prev: MyNode | null;
+    next: MyNode | null;
+
+    constructor(key: number, val: number) {
+        this.key = key;
+        this.val = val;
+        this.prev = null;
+        this.next = null;
+    }
 }
+*/
 
 Pseudocode:
-1. Instantiate a Node class to create the doubly linked list
-  1. Set its constructor to have a key and value
+/*
+// Create the MyNode class in order to create a double linked list
+1. Instantiate a Node class named MyNode
+  1. Set its parameter definitions to include key: number, val: number, prev: MyNode | null, and next: MyNode | null (allow it to instantiate without a prev/next pointer, but give it the option to set prev and next only to MyNode datatypes later)
+  2. Set its constructor to take in a key and value, the key will be the given key for the cache, and the value will be the number
+  3. Set its prev to be null
+  4. Set its next to be null
 
+// Define the LRUCache parameters and constructor
+1. Set the parameters to include:
+    1. capacity: number; this will be the given capacity when instantiating a new LRUCache
+    2. cache: object; this will be the hashmap that holds the given keys and the values being the created MyNode's
+    3. left: MyNode; this will be the leftmost node pointing to the least recently used node in the list
+    4. right: MyNode; this will be the rightmost node pointing to the most recently used node in the list
+    Note: when getting or editing an existing node, that node gets removed from wherever it is in the list, and put to the rightmost side right before the this.right node. This causes the least recently used nodes to naturally be on the left side of the doubly linked list, since they aren't being touched, but their neighbors are being removed and inserted to their right.
+2. Set up the LRUCache constructor:
+    1. Set capacity to this.capacity
+    2. Set cache to be {}
+    3. Set left to be a new MyNode with 0 for key and value
+    4. Set right to be a new MyNode with 0 for key and value
+    5. IMPORTANT: connect left and right. At first it will be just these border nodes, and we'll insert new nodes as they come and get edited/retrieved
+        1. Set left.next to equal right
+        2. Set right.prev to equal left
+
+// Set up helper functions remove and insert
+3. remove: Create a new method remove that takes in a node: MyNode datatype. This function disconnects the node from the list, but the cache at its key will still point to it
+    1. Within the function, save the node's left neighbor (node.prev) to a variable left
+    2. Save the node's right neighbor (node.next) to a variable right
+    3. Set left.next to be right (bypass node)
+    4. Set right.prev to be left (bypass node, cutting it out of the list)
+4. insert: Create a new method insert that adds a node just before the this.right node, it takes in node: MyNode datatype
+    1. Save this.right node to a variable right
+    2. Save this.right.prev node to a variable left
+    3. Set left.next to point to the node input
+    4. Set node.prev to point to left
+    5. Set node.next to point to right
+    6. Set right.prev to point to the node input
+
+// Define the get function, using the remove and insert helper functions
+5. In get, if the cache contains the input key
+    1. store the node at that key in a variable retrievedNode
+    2. remove retrievedNode from the list, wherever it lies in the list, with this.remove(retrievedNode)
+    3. add retrievedNode to the rightmost of the list with this.insert(retrievedNode)
+    4. Return retrievedNode.val
+6. If the cache doesn't contain the input key, return -1
+
+// Define the put function, using the remove and insert helper functions, and keeping in mind capacity and the number of keys in the cache
+7. In the put function, if the key given already exists in the cache, remove the node from the list: this.remove(this.cache[key]);
+8. Instantiate a new variable set to new Node(key, value)
+9. Whether or not the key existed in the cache, the code to either set the new node at that key, or edit the key to point to the new node, is the same: this.cache[key] = new
+10. Insert the node into the list: this.insert(new)
+11. Check capacity:
+    1. If capacity is less than the number of keys in the cache (Object.keys(this.cache).length), then remove the most recently used (leftmost) node:
+        1. Store the node being removed in a variable lru: lru = this.left.next
+        2. Remove the node from the list: this.remove(lru)
+        3. Delete the key that points to the lru node: delete this.cache[lru.key]
+*/
 
 Code:
 
