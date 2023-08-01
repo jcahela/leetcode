@@ -42,6 +42,28 @@ function diameterOfBinaryTree(root: TreeNode | null): number {
 };
 ```
 
+```js
+// Easier solution that doesn't use -1 for null nodes, or adds by 2 to consider the edges from the current node:
+function diameterOfBinaryTree(root: TreeNode | null): number {
+    let maxDiameter = 0;
+
+    function dfs(node: TreeNode): number {
+        if (!node) return 0;
+        const leftHeight = dfs(node.left);
+        const rightHeight = dfs(node.right);
+
+        maxDiameter = Math.max(maxDiameter, leftHeight + rightHeight);
+
+        const currentHeight = 1 + Math.max(leftHeight, rightHeight);
+        return currentHeight;
+    }
+
+    dfs(root);
+
+    return maxDiameter;
+};
+```
+
 
 Time Complexity: O(n)
 Explanation: Since we only need to traverse the tree once using recursive dfs
