@@ -1,3 +1,37 @@
+var isPalindrome = function(s) { // "A man, a plan, a canal: Panama"
+  let left = 0;
+  let right = s.length - 1;
+  let isSpecialCharacter = /[\W\s_]/g;
+
+  while (left < right) {
+      const leftChar = s[left];
+      const rightChar = s[right];
+      if (isSpecialCharacter.test(leftChar)) {
+          left += 1;
+          continue;
+      }
+
+      if (isSpecialCharacter.test(rightChar)) {
+          right -= 1;
+          continue;
+      }
+
+      if (leftChar.toLowerCase() !== rightChar.toLowerCase()) {
+          console.log(isSpecialCharacter.test(leftChar));
+          return false;
+      }
+
+      left++;
+      right--;
+  }
+
+  return true;
+}
+
+console.log(isPalindrome("A man, a plan, a canal: Panama"));
+
+/**************** Attempt 2 *********************/
+
 /**
  * @param {string} s
  * @return {boolean}
@@ -57,23 +91,24 @@ Space complexity: O(1) - Since we only use pointers and regex and they are all O
 */
 
 var isPalindrome = function(s) {
-  const isAlphanumeric = /[a-zA-Z0-9]/;
-  let l = 0;
-  let r = s.length - 1;
-
-  while (l < r) {
-      if (!isAlphanumeric.test(s[l])) {
-          l += 1;
-      } else if (!isAlphanumeric.test(s[r])) {
-          r -= 1;
-      } else {
-          if (s[l].toLowerCase() !== s[r].toLowerCase()) {
-              return false;
-          }
-          l += 1;
-          r -= 1;
-      }
+    const isAlphanumeric = /[a-zA-Z0-9]/;
+    let l = 0;
+    let r = s.length - 1;
+  
+    while (l < r) {
+        if (!isAlphanumeric.test(s[l])) {
+            l += 1;
+        } else if (!isAlphanumeric.test(s[r])) {
+            r -= 1;
+        } else {
+            if (s[l].toLowerCase() !== s[r].toLowerCase()) {
+                return false;
+            }
+            l += 1;
+            r -= 1;
+        }
+    }
+  
+    return true;
   }
-
-  return true;
-}
+  
