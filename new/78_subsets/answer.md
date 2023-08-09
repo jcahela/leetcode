@@ -17,16 +17,15 @@ The leaf nodes/subsets of this decision tree become the possible subsets of the 
 Pseudocode:
 /*
 1. Instantiate an output array that starts empty
-2. Instantiate a subset array that starts empty
-3. Define a backtrack function that takes in parameter index: number
+2. Define a backtrack function that takes in parameters - subset: number[], index: number
   1. Base case: if i === nums.length (you've made the last decision in the current branch and are ready to push the subset into the output array)
-    1. Push a copy of the subset into the output array (since we'll be popping numbers and adding numbers from the subset, we don't want to mutate the arrays already in the output array by having them point to the same subset we mutate along the branch paths)
-  2. Decision 1: include nums at i. Since you want to include nums at i, push nums at i into the current subset: subset.push(nums[i])
-  3. Next, call the backtrack function and pass in the next index to go along that path with having included nums[i]
-  4. Decision 2: don't include nums at i. Since you don't want to include nums at i, pop the last added num from the subset array: subset.pop()
-  5. Next, call the backtrack function and pass in the next index to go along that path with having not included nums[i]
-4. Call the backtrack function
-5. Return the output
+    1. Push the current subset into the output array
+  2. Decision 1: include nums at i.
+    1. Since you want to include nums at i, call the backtrack function and pass in a new array, with subset spread into it, and nums[i] at the end ([...subset, nums[i]]), and with index + 1 for the index
+  3. Decision 2: don't include nums at i.
+    1. Since you don't want to include nums at i, call the backtrack function and just pass in subset, with index + 1 for the index
+3. Call the backtrack function
+4. Return the output
 */
 
 
@@ -36,24 +35,19 @@ Code:
 function subsets(nums: number[]): number[][] {
     const output = [];
 
-    let subset = [];
-
-    function backtrack(i) {
+    function backtrack(subset, i) {
         if (i === nums.length) {
-            output.push([...subset]);
+            output.push(subset);
             return;
         }
-
         // decision to include nums[i]
-        subset.push(nums[i]);
-        backtrack(i + 1);
+        backtrack([...subset, nums[i]], i + 1);
 
         // decision to not include nums[i]
-        subset.pop();
-        backtrack(i + 1);
+        backtrack(subset, i + 1);
     }
 
-    backtrack(0);
+    backtrack([], 0);
 
     return output;
 };
