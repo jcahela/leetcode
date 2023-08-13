@@ -42,3 +42,73 @@ function generateParenthesis(n: number): string[] {
 
     return output;
 };
+
+/*    Attempt 2     */
+/**
+ * @param {number} n
+ * @return {string[]}
+
+
+To generate ALL combinations of well-formed parentheses, I can use backtracking and recursion to go through a decision tree
+
+                                    (
+                        addopen         addclosed
+                        ((                  ()
+                    addopen   addclosed             addO
+                    (((         (()                 ()(
+                addC         addO      addC        addO    addC
+                ((()         (()(      (())         ()((    ()()
+            addC            addC        addO        addC        addO
+        ((())               (()()       (())(       ()(()       ()()(
+    addC                addC            addC          addC        addC
+    ((()))              (()())          (())()        ()(())        ()()()
+
+What decision do I make at each recursive step?
+
+    1. If I have less than n open parentheses, I may add an open parenthesis
+    2. If I have an equal number of closed and open parentheses, I MUST add an open parentheses
+    3. If I have n open parentheses, I MUST add a closed parenthesis
+    4. Once the final string is n * 2 in length, add it to the answer array and return
+
+Pseudocode:
+
+1. Instantiate a res array that's empty
+2. Define a dfs function with parameters: parenString: string, openCount: number, closeCount: number
+    1. if parenString is equal to n * 2
+        1. Add parenString to the res array
+        2. return
+    2. if openCount < n
+        1. Call the dfs function on an added open parenthesis: parenString + '(', openCount + 1, closeCount
+    3. if openCount > closeCount (strictly greater than, if open and close are equal, you CAN'T add a close)
+        1. Call the dfs function on an added close parenthesis: parenString + ')', openCount + 1, closeCount
+3. Call dfs with the following args: '', 0, 0
+4. Return the res array
+                
+Time complexity: O(n^2) - Since I'm making 2 decisions each recursive call, and the height of the decision tree is 2n, which simplifies to n
+
+Space complexity: O(n) - Since the height of the decision tree is how much stack space is needed, and the decision tree height is 2n, it simplifies to O(n)
+
+ */
+
+function generateParenthesis(n: number): string[] {
+    const res = [];
+
+    function dfs(parenString: string, openCount: number, closeCount: number) {
+        if (parenString.length === (n * 2)) {
+            res.push(parenString);
+            return;
+        }
+
+        if (openCount < n) {
+            dfs(parenString + '(', openCount + 1, closeCount);
+        }
+
+        if (openCount > closeCount) {
+            dfs(parenString + ')', openCount, closeCount + 1);
+        }
+    }
+    
+    dfs('', 0, 0);
+
+    return res;
+};
