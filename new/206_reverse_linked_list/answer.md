@@ -76,7 +76,7 @@ Explanation:
   Iterative: Since we iterate through the list once to switch the pointers, the overall time complexity will be O(n) on the iterative solution
   Recursive: Since we perform O(1) operations each recursive call, and it needs to go n stacks deep, the overall time complexity will be O(n)
 
-Space:
+Space Complexity:
   Iterative: O(1)
   Recursive: O(n)
 Explanation:

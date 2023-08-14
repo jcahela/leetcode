@@ -70,5 +70,5 @@ function permute(nums: number[]): number[][] {
 Time Complexity: O(n!)
 Explanation: Since you need to get every permutation of a list of numbers, and since every level of the decision tree multiplies the number of nodes by the amount of numbers that haven't already been added (n - 1) the total time complexity is n factorial, where n is the length of the nums input, since level by level the decision tree would be 6 nodes for level 1 -> 6 * 5 nodes for level 2 -> 6 * 5 * 4 nodes for level 3 -> 6 * 5 * 4 * 3 nodes for level 4 -> and 6 * 5 * 4 * 3 * 2 nodes for level 5, resulting in that many nodes for level 6, which is where all the permutations would lie.
 
-Space: O(n^2)
+Space Complexity: O(n^2)
 Explanation: Where n is length of the nums input, since I have to copy it every time I take a number out of it to put into the current permutation array. And since the recursive stack adds to the height of the decision tree, and since the decision tree height is n long, the overall space complexity is O(n^2)

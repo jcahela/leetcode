@@ -100,5 +100,5 @@ function reorderList(head: ListNode | null): void {
 Time Complexity: O(n)
 Explanation: Since we iterate over the list once to get the half, and another time to reverse the second half, and a third time to zip, these simplify down to O(n)
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since we only use pointers to do the 3 steps of finding the start of the second half, reversing the second half, then merging the first and second halves

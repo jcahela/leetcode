@@ -47,5 +47,5 @@ function levelOrder(root: TreeNode | null): number[][] {
 Time Complexity: O(n)
 Explanation: Where n is the number of nodes in the tree, since we traverse through it once
 
-Space: O(n)
+Space Complexity: O(n)
 Explanation: Since we store each node value into an output array, and queue

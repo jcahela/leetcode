@@ -28,5 +28,5 @@ function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: Tree
 Time Complexity: O(log n)
 Explanation: Since we half the tree each time we recurse down, so the number of nodes we need to traverse log n
 
-Space: O(h)
+Space Complexity: O(h)
 Explanation: Where h is the depth of the LCA, since that's where we are directing the recursive function (it goes left/right based on the current node's value compared to p and q, so it won't reach a leaf node/null node). Technically it doesn't even need the if (root === null) base case since it'll find the LCA before that.

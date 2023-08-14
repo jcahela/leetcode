@@ -44,5 +44,5 @@ function goodNodes(root: TreeNode | null): number {
 Time Complexity: O(n)
 Explanation: Since we only need to traverse the tree once to find the good nodes
 
-Space: O(h)
+Space Complexity: O(h)
 Explanation: Since we need the tree's height in number of call stacks to traverse the tree

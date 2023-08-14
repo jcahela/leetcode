@@ -36,5 +36,5 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
 Time Complexity: O(p + q)
 Explanation: Since we are traversing both trees and it's not guaranteed they have the same length, so the overall time complexity is both of them added together
 
-Space: O(minH)
+Space Complexity: O(minH)
 Explanation: Since we are traversing both trees, but if either of them have a null node where the other has a non null node, it'll start propogating back up as soon as the shorter tree reaches a null, even if the longer tree has a truthy node at that null node. So, it'll start propogating back up in alignment with the smaller of the two trees, so min height.

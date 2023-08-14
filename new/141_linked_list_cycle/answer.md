@@ -41,5 +41,5 @@ function hasCycle(head: ListNode | null): boolean {
 Time Complexity: O(n)
 Explanation: Since I'm traversing the list once, or cycling through the cycle with the fast pointer while traversing one at a time with the slow pointer, the most operations would be traversing n times through the list with the slow pointer
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since I'm only using pointers

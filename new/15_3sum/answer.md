@@ -84,5 +84,5 @@ function threeSum(nums: number[]): number[][] {
 Time Complexity: O(n^2)
 Explanation: Since I'm iterating through nums, and each iteration, iterating through the rest of nums
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since I'm only using pointers

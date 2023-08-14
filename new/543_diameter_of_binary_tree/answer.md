@@ -68,5 +68,5 @@ function diameterOfBinaryTree(root: TreeNode | null): number {
 Time Complexity: O(n)
 Explanation: Since we only need to traverse the tree once using recursive dfs
 
-Space: O(h)
+Space Complexity: O(h)
 Explanation: Since at most we will use height number of stacks in the recursive call stack before popping out and checking other nodes during traversal

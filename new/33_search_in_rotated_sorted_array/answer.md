@@ -62,5 +62,5 @@ function search(nums: number[], target: number): number {
 Time Complexity: O(log n)
 Explanation: Since I'm halving the array I have to search every iteration
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since I'm using pointers only

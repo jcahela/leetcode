@@ -59,5 +59,5 @@ function subsetsWithDup(nums: number[]): number[][] {
 Time Complexity: O(2^n)
 Explanation: Since I need to make 2 decisions each recursive level, and the levels of the decision tree at n long, where n is the number of nums in the nums input, or height of the tree
 
-Space: O(n*h)
+Space Complexity: O(n*h)
 Explanation: Since I need to create a copy each recursive call, and the recursive stack is h, or tree height, deep

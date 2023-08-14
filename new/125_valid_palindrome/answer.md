@@ -56,5 +56,5 @@ function isPalindrome(s: string): boolean {
 Time Complexity: O(s)
 Explanation: Where s is the length of the input string s, since we only iterate through it once with two pointers
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since I only use pointers

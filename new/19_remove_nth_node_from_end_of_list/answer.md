@@ -103,5 +103,5 @@ function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
 Time Complexity: O(n)
 Explanation: Since we only need to iterate over the list once to get the length (or the left pointer with the two pointer method), and another time minus n to get the stopping point, simplifying to O(n)
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since we only use pointers to find the node to skip

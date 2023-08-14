@@ -59,5 +59,5 @@ function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
 Time Complexity: O(p * i)
 Explanation: Where p is the length of the preorder array, and i is the length of the inorder array. Since I'm recursively calling the function on subarray in p, and slicing the preorder and inorder arrays to create the subarrays to pass into the recursive calls, the total time complexity is O(p * i) 
 
-Space: O(p + i)
+Space Complexity: O(p + i)
 Explanation: Where p is the length of the preorder array, and i is the length of the inorder array. In the worst case scenario, the recursion depth could be i if the tree is left-skewed or right-skewed, since the recursive call occurs on every number in the inorder array when being constructed.

@@ -48,5 +48,5 @@ function isBalanced(root: TreeNode | null): boolean {
 Time Complexity: O(n)
 Explanation: Since we only need to traverse through the tree once to find if at any point it's not height-balanced
 
-Space: O(h)
+Space Complexity: O(h)
 Explanation: Since I'm using recursive DFS and the max number of stacks needed will be h, or the max height of the tree

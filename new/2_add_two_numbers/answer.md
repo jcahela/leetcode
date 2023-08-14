@@ -168,5 +168,5 @@ function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | nul
 Time Complexity: O(l1 + l2)
 Explanation: Since I traverse both lists to reverse them, traverse them again to get the addends, then iterate over a string version of the sum, the worst time complexity is the addition of the two lengths of lists
 
-Space: O(s)
+Space Complexity: O(s)
 Explanation: Where s is the length of the string of the sum of the two addends gotten by the list, which is what I use to create the hashmap

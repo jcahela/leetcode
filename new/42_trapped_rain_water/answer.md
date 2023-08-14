@@ -62,8 +62,8 @@ function trap(height: number[]): number {
 ```
 
 
-Time Complexity:
-Explanation:
+Time Complexity: O(n)
+Explanation: Where n is the length of the height array. Since we iterate over it 3 times sequentially, it simplifies to O(n)
 
-Space:
-Explanation:
+Space Complexity: O(n)
+Explanation: Where n is the length of the height array. Since we're using the maxLeft and maxRight arrays to hold the same amount of numbers as the height array, the space complexity simplifies to O(n).

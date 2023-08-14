@@ -36,5 +36,5 @@ var invertTree = function(root) {
 Time Complexity: O(n)
 Explanation: Where n is the number of nodes in the tree, since I'd travese through each one changing their left and right
 
-Space: O(h)
+Space Complexity: O(h)
 Explanation: Where h is the height of the tree, since the deepest recursive call would go down the a leaf node then pop out, removing 1 from the call stack, before going to the next leaf node, adding 1 back to the call stack. Overall, the call stack will at worse be h recursive call stacks tall.

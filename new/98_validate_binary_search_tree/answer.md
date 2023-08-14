@@ -50,5 +50,5 @@ function isValidBST(root: TreeNode | null): boolean {
 Time Complexity: O(n)
 Explanation: Since we only need to traverse the tree once
 
-Space: O(h)
+Space Complexity: O(h)
 Explanation: Since we only need the tree's height number of call stacks to traverse through the tree

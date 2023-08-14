@@ -70,5 +70,5 @@ function minEatingSpeed(piles: number[], h: number): number {
 Time Complexity: O(n * log*Max(n))
 Explanation: Where n is the length fo the piles array. Since I'm running the calculateHours function which is O(n) within a binary search from 1 to the max pile in the piles array, which is O(log Max(n)), the overall time complexity is O(n * log*Max(n))
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since I'm only using pointers and holding single points of data to divide from from within calculateHours

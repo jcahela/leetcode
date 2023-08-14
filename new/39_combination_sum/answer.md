@@ -76,5 +76,5 @@ function combinationSum(candidates: number[], target: number): number[][] {
 Time Complexity: O(n * 2^h)
 Explanation: You make 2 decisions every recursive layer (should I add number at i down this branch, or never add the number at i?), and the height of the decision tree will be the amount of times you have to make those 2 decisions. Since you have to make a copy of the current combination sum array each recursive call, the total time complexity will be O(n*2^h)
 
-Space: O(n * h)
+Space Complexity: O(n * h)
 Explanation: Since you have to create a new combination sum array each recursion, until you reach the height of the tree

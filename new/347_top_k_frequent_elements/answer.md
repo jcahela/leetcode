@@ -54,5 +54,5 @@ function topKFrequent(nums: number[], k: number): number[] {
 Time Complexity: O(n)
 Explanation: Where n is the length of the nums array. Since I loop through the nums array to create the hashmap of counts (O(n)), then loop through the keys of that map (O(n)). Then, I iterate backwards over the counts array until k is 0, the most expensive operation by order of magnitude is iterating backwards of the counts array n, but it's limited by k such that it'll stop once I reach k number of elements within the subarrays. So overall time complexity is O(n)
 
-Space: O(n)
+Space Complexity: O(n)
 Explanation: Where n is the length of the nums array. Since I create a hashmap that holds the count of each distinct number in the nums array (O(n)) and create a bucketArray that holds each num at an index that represents their count (O(n)), then create a distinctNums array that holds the keys of the hashmap to push the nums at the correct indexes of the bucketArray (O(n)), the overall space complexity is O(3n) which simplifies to O(n).

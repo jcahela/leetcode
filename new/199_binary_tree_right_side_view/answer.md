@@ -42,5 +42,5 @@ function rightSideView(root: TreeNode | null): number[] {
 Time Complexity: O(n)
 Explanation: Since I'm traversing the whole tree to find the rightmost node of each level
 
-Space: O(n)
+Space Complexity: O(n)
 Explanation: Since I'm storing n/2 nodes in the queue at the worst time, which simplifies to O(n)

@@ -39,5 +39,5 @@ function kthSmallest(root: TreeNode | null, k: number): number {
 Time Complexity: O(n)
 Explanation: Since I'm iterating through the tree once to form the in-order output array, and indexing into that array at O(1) time
 
-Space: O(n)
+Space Complexity: O(n)
 Explanation: Since I'm creating a numbers array that holds each number in the BST

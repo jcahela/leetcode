@@ -92,5 +92,5 @@ function maxDepth(root: TreeNode | null): number {
 Time Complexity: O(n)
 Explanation: Where n is the number of nodes in the tree, since we're traversing through the whole tree to find the max depth
 
-Space: O(h) recursive, O(n) iterative
+Space Complexity: O(h) recursive, O(n) iterative
 Explanation: In the recursive solution, the max number of call stacks will be the depth of the tree, since it pops out and removes a stack from the call stack when propogating back up the recursive calls once reaching the depth of h. In the iterating solution, you only pop out one node from the stack/queue before adding its children, so it more closely approaches O(n), though doesn't quite reache O(n).

@@ -17,5 +17,5 @@ function name(parameters) {
 Time Complexity:
 Explanation:
 
-Space:
+Space Complexity:
 Explanation:

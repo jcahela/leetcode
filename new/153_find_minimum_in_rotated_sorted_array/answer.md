@@ -49,5 +49,5 @@ function findMin(nums: number[]): number {
 Time Complexity: O(log n)
 Explanation: Since I'm halving the array I'm searching for each iteration
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since I'm only using pointers

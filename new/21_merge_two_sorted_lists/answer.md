@@ -51,5 +51,5 @@ function mergeTwoLists(list1: ListNode | null, list2: ListNode | null): ListNode
 Time Complexity: O(n + m)
 Explanation: Since we have to go through both lists, the worst case time complexity is iterating through both (if list1 contains the extreme values, and list2 is 100 nodes long with values in between the nodes of list1, then worst case is we have to iterate through both sequentially)
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since we only use pointers to go through the lists

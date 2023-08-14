@@ -57,5 +57,5 @@ function subsets(nums: number[]): number[][] {
 Time Complexity: O(n * 2^n)
 Explanation: Since each number in the nums array has 2 decisions to make, and you end up with 2^n subsets (ex. [1,2,3], there are 2 decisions at index 1, 2 decisions at index 2, and 2 at index 3, and since they occur within recursive calls of the previous index, it's 2 * 2 * 2, or 8 total subsets), and since at each recursive call you create a copy of the subset to put into the output array, the ultimate time complexity is O(n * 2^n).
 
-Space: O(n)
+Space Complexity: O(n)
 Explanation: The most numbers stored in the subset array at any one point is n in length, and the highest height of the decision tree will also be n in height, and since the subset array is outside the recursive function, the total time complexity is O(2n), which simplfies to O(n).

@@ -47,5 +47,5 @@ function findDuplicate(nums: number[]): number {
 Time Complexity: O(n) 
 Explanation: Since we're iterating through a linked list cycle using floyd's algorithm, it has a time complexity of O(n)
 
-Space: O(1)
+Space Complexity: O(1)
 Explanation: Since we're only using pointers

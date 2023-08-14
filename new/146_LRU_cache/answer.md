@@ -172,5 +172,5 @@ class LRUCache {
 Time Complexity: O(n)
 Explanation: Since every operation is O(1), I run through the given inputs n and perform n many operations
 
-Space: O(c)
+Space Complexity: O(c)
 Explanation: Where c is the capacity of the LRUCache object. Since I'm only holding that many keys in my cache hashmap and that many nodes in my node list which keeps track of the least recently used and most recently used sides

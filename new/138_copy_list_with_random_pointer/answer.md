@@ -50,5 +50,5 @@ var copyRandomList = function(head) {
 Time Complexity: O(n)
 Explanation: Since we pass through the linked list twice, we run O(2n) operations, which simplifies to O(n)
 
-Space: O(n)
+Space Complexity: O(n)
 Explanation: Since we use a hashmap to hold all the nodes and their copies, the max space used is O(n)

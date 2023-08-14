@@ -64,5 +64,5 @@ function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
 Time Complexity: O(s * t)
 Explanation: Where s is the root tree and t is the potential subTree. Worst case scenario, I have to traverse through t at every node in s, if every node in s has the same value as the subRoot root node. So worst case time complexity is O(s * t).
 
-Space: O(h)
+Space Complexity: O(h)
 Explanation: At worse the call stack will fill until at a root node of the tallest tree as I'm checking for 1) nodes in root tree with the same value as subRoot, and 2) traversing both the subtree of root and the t potential subtree.
