@@ -1,6 +1,6 @@
 Time to Complete: 30m
 
-Method: Sliding window with a hashmap keeping careful watch whenever the current letter exceeds a count of 1, to start sliding the window at that point. Since I need to find a substring, which is a string within the input s that is an unbroken string of non-repeating characters (not a subsequence which is any of the letters in s that are not repeating, regardless of whether they're next to each other), I can use a sliding window approach
+Method: Sliding window with a hashmap keeping careful watch whenever the current letter exceeds a count of 1, to start sliding the window from the left at that point. Since I need to find a substring, which is a string within the input s that is an unbroken string of non-repeating characters (not a subsequence which is any of the letters in s that are not repeating, regardless of whether they're next to each other), I can use a sliding window approach.
 
 Pseudocode:
 /*
