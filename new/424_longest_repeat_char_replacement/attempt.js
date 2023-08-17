@@ -101,3 +101,150 @@ var characterReplacement = function(s, k) {
 };
 
 // Result: Failed on examples where you had to take into account past characters on later windows: "ABBB"
+
+/************************ 2nd attempt SOLVED with sliding window, maybe not optimal in time **************************/
+/*
+
+I can use a sliding window
+
+At the start of the sliding window:
+
+k = 2
+
+5 is the most (convert C and A to B)
+
+         r
+   l
+ 0 1 2 3 4 5 6
+"A B C A B B A"
+
+{
+    'A': 1,
+    'B': 2,
+    'C': 1,
+}
+
+If I keep track of the most frequent letter in the current window
+
+First A is the most frequent letter in the current window
+
+When I increment r, A and B are just as frequent as each other, so maybe I keep A as the most frequent
+
+WHen I increment r, A B and C are just as frequent as each other, so maybe I keep A as the most frequent
+
+(2 - 0 + 1) - 2 = 1 (width of window minus the number of most frequent letters)
+if (width of window - most frequent letters) <= k, I can count this as a valid window
+
+(4 - 0 + 1) - 2 = 3 > k(2) so this is an invalid window
+    - increment l, subtract the letter from the count map
+    - recalculate most frequent letter by looping through the map
+    - check if window width - most frequent letter <= k
+
+
+
+k = 2
+
+               r
+       l
+ 0 1 2 3 4 5 6
+"A B C A B B A"
+
+let mostFrequent = 'B';
+let mostFrequentCount = 2;
+
+const counts = {
+    'A': 2,
+    'B': 2,
+    'C': 0
+}
+
+let longestSubstring = 5;
+
+while (r < s.length) {
+    counts[s[r]] ? counts[s[r]] += 1 : counts[s[r]] = 1;
+
+    // replace mostFrequent and mostFrequentCount if whatever letter I just added is now greater
+    if (counts[s[r]] > mostFrequentCount) {
+        mostFrequent = s[r];
+        mostFrequentCount = counts[s[r]];
+    }
+
+    let windowWidth = r - l + 1; // 5 - 1 + 1 = 5
+
+    if (windowWidth - mostFrequentCount <= k) { // 5 - 3 = 2 <= k(2) TRUE
+        longestSubstring = Math.max(longestSubstring, windowWidth);
+    } else {
+        // This is an invalid window
+
+        // while (windowWidth - mostFrequentCount > k) {
+            // Decrement the count of the letter at L
+            counts[s[l]] -= 1;
+            l += 1;
+
+            windowWidth = r - 1 + 1;
+
+            // recalculate the most frequent count and letter:
+            for (const letter of Object.keys(counts)) {
+                mostFrequent = null;
+                mostFrequentCount = 0;
+                if (counts[letter] > mostFrequentCount) {
+                    mostFrequent = letter;
+                    mostFrequentCount = counts[letter];
+                }
+            }
+        }
+    }
+
+    r += 1;
+}
+
+return longestSubstring;
+
+Time complexity: O(n) - Since it only loops through the unique letters of an invalid window once finding an invalid window. After that, it loops normally
+
+Space complexity: O(u) - Where u is the number of unique letters in the string s, since I'm storing that many keys
+
+*/
+
+function characterReplacement(s: string, k: number): number {
+    let mostFrequent;
+    let mostFrequentCount = 0;
+
+    const counts = {}
+
+    let l = 0;
+    let r = 0;
+
+    let longestSubstring = 0;
+
+    while (r < s.length) {
+        counts[s[r]] ? counts[s[r]] += 1 : counts[s[r]] = 1;
+        if (counts[s[r]] > mostFrequentCount) {
+            mostFrequent = s[r];
+            mostFrequentCount = counts[s[r]];
+        }
+
+        let windowWidth = r - l + 1;
+
+        if (windowWidth - mostFrequentCount <= k) {
+            longestSubstring = Math.max(longestSubstring, windowWidth);
+        } else {
+            counts[s[l]] -= 1;
+            l += 1;
+
+            windowWidth = r - l + 1;
+            for (const letter of Object.keys(counts)) {
+                mostFrequent = null;
+                mostFrequentCount = 0;
+                if (counts[letter] > mostFrequentCount) {
+                    mostFrequent = letter;
+                    mostFrequentCount = counts[letter];
+                }
+            }
+        }
+
+        r += 1;
+    }
+
+    return longestSubstring;
+};
