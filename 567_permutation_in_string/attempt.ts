@@ -165,3 +165,96 @@ var checkInclusion = function(s1, s2) {
 // Succeeded, but is slow:
 // Runtime = 2891 ms, beats 19.39% of users
 // Memory = 117.61 mb, beats 5.07% of users
+
+/**************************** Attempt 2 ********************************** */
+
+/*
+
+If I use a fixed sliding window of s1 length, I can check if the current window is a permutation of s1
+
+How would I check if the current window is a permutation of s1?
+
+Have a hashmap of s1:
+
+s1 {
+    'a': 1,
+    'b': 1
+}
+
+Then create a hashmap of the current window outside the while loop
+
+window {
+    'e': 1,
+    'i': 1
+}
+
+Then check if windowMap has the same letters as s1 map, and the same amount of those letters
+
+    if at any point the letters don't match, or the letters do match but the counts of the letters don't match:
+        I shift the window by 1
+        Then add/subtract as needed from the window map
+        Then recompare the new windowMap. Does it have the same letters as s1 map, and the same amount of those letters?
+
+Pseudocode:
+1. Instantiate an s1Counts at {}
+2. Iterate through s1 and fill the s1Counts hashmap with letters and counts in s1
+3. Instantiate a left pointer at 0
+4. Instantiate a right pointer at s1.length - 1 (if s1 is 2, I want the window to have 2 letters, so from 0 to index 1, which would be 2 - 1 = 1 as the index)
+5. Instantiate a windowCounts at {}
+6. Iterate through the window and fill the windowCounts hashmap with letters and counts in the current window
+7. While (r < s2.length)
+    // First check if the current window has the same letters and the same amount of those letters as s1 map
+    1. Instantiate a isPermutation at true
+    2. Iterate through the keys of the windowCounts object
+        1. if at any point, the current letter is not in s1Counts, or the letter IS in s1Counts but a different frequency than the same letter in windowCounts:
+            1. set isPermutation to false
+            2. Then, break from this loop
+    3. If at this point, isPermutation is still true, it's a permutation of s1, so return true
+    4. Else (isPermutation was switched to false in above step 7.2.1.1)
+        1. Increment r, add new letter at r to windowCounts if exists
+        2. Remove letter at l from windowCounts, increment l
+8. Return false (at this point, every window was found to be not a permutation)
+
+Time complexity: O(s1 + s2) - Since I need to iterate through s1 to create an s1Count map, and iterate through s2 to find all possible windows to be permutations
+
+Space complexity: O(s1) - Where s1 is the number of unique letters in s1, since windowCount would have the same number of letters as s1, and can at most have s1 number of unique letters as keys, I'm storing a size of s1 twice, so it simplifies to s1 
+
+*/
+
+function checkInclusion(s1: string, s2: string): boolean {
+    let s1Counts = {};
+    for (const letter of s1) {
+        s1Counts[letter] ? s1Counts[letter] += 1 : s1Counts[letter] = 1;
+    }
+    let l = 0;
+    let r = s1.length - 1;
+
+    let windowCounts = {};
+
+    for (let i = l; i <= r; i += 1) {
+        windowCounts[s2[i]] ? windowCounts[s2[i]] += 1 : windowCounts[s2[i]] = 1;
+    }
+
+    while (r < s2.length) {
+        let isPermutation = true;
+        for (const windowLetter of Object.keys(windowCounts)) {
+            if (!s1Counts[windowLetter] || s1Counts[windowLetter] !== windowCounts[windowLetter]) {
+                isPermutation = false;
+                break;
+            }
+        }
+        if (isPermutation) {
+            return true;
+        } else {
+            r += 1;
+            windowCounts[s2[r]] ? windowCounts[s2[r]] += 1 : windowCounts[s2[r]] = 1;
+            windowCounts[s2[l]] -= 1;
+            if (windowCounts[s2[l]] === 0) {
+                delete windowCounts[s2[l]];
+            }
+            l += 1;
+        }
+    }
+
+    return false;
+};
