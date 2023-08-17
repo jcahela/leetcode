@@ -90,3 +90,58 @@ function search(nums: number[], target: number): number {
 
   return -1;
 };
+
+
+
+/********************* Attempt 2 - done in 5 mins ***********************/
+
+/**
+
+Use binary search
+
+First, check if the target is the middle number, if it's not, continue
+Starting at the middle, check if the left number is less than or equal to the mid number
+    - If so, the left side is sorted
+        If the left side is sorted, I can check if the target is greater than mid or less than left
+            - if either of these are true, I go right
+        Else
+            - The target is both smaller than mid and greater than left, so I go left
+    - else, the right side is sorted
+        If the right side is sorted, I can check if the target is greater than right or less than mid
+            - If either of these are true, I go left
+        Else
+            - The target is both smaller than right and greater than mid, so I go right
+
+Time complexity: O(log n) - Since I'm using binary search
+Space complexity: O(1) - Since I'm only using pointers
+
+ */
+
+function search(nums: number[], target: number): number {
+    let l = 0;
+    let r = nums.length - 1;
+
+    while (l <= r) {
+        const m = Math.ceil((l + r) / 2);
+
+        if (nums[m] === target) {
+            return m;
+        }
+
+        if (nums[l] <= nums[m]) {
+            if (target > nums[m] || target < nums[l]) {
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        } else {
+            if (target < nums[m] || target > nums[r]) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+    }
+
+    return -1;
+};
