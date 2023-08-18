@@ -60,4 +60,40 @@ function reverseList(head) {
     return currentNode;
 };
 
-// Recursive:
+/**************************** Attempt 2 - easy ******************************/
+/*
+
+To reverse a linked list, I need to traverse from the head, and at each node, set the next pointer to the previous node, then jump to the original next node
+
+So I'd need to store the original next node in a temp variable, set the current node's next pointer to the previous node, then set the current node to be the node stored in the temp variable
+
+
+Pseudocode:
+1. Instantiate a curr var at head
+2. Instantiate a prev var at null
+3. while (curr)
+    1. Instantiate a tmp var that holds curr.next
+    2. Set curr.next to be prev
+    3. Set prev to be curr
+    4. Set curr to be tmp
+4. Return prev (it'll be the new head, since I will have set prev to be curr before setting curr to be tmp, which at the tail will set curr to be null, and prev to be the last node in the list)
+
+Time complexity: O(n) - Where n is the number of nodes in the list, since I'm traversing through it once
+Space complexity: O(1) - Since I'm only using pointers
+
+*/
+
+
+function reverseList(head: ListNode | null): ListNode | null {
+    let curr = head;
+    let prev = null;
+
+    while (curr) {
+        const tmp = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = tmp;
+    }
+
+    return prev;
+}
