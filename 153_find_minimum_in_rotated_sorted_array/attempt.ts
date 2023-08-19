@@ -89,3 +89,31 @@ function findMin(nums: number[]): number {
 
   return minimum;
 };
+
+/********************* Attempt #2 good ************************/
+
+function findMin(nums: number[]): number {
+    if (nums.length === 1) return nums[0];
+    let l = 0;
+    let r = nums.length - 1;
+
+    while (l <= r) {
+        const m = Math.ceil((l + r) / 2);
+        
+        const leftOfM = m === 0 ? nums.length - 1 : m - 1;
+
+        if (nums[m] < nums[leftOfM]) {
+            return nums[m];
+        }
+
+        if (nums[l] < nums[r]) {
+            return nums[l];
+        }
+
+        if (nums[l] <= nums[m]) {
+            l = m + 1;
+        } else {
+            r = m - 1;
+        }
+    }
+};
