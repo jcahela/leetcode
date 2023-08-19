@@ -92,3 +92,36 @@ function mergeTwoLists(list1: ListNode | null, list2: ListNode | null): ListNode
   // if (right) newHead.next = right;
   return newHead;
 };
+
+/************************ Attempt 2 - fail, need to get used to the shifting of pointers. I got the concept down, but wasn't sure how to execute in code *************************** */
+
+/*
+
+First I can create a dummy node so I have something that points to head to return
+
+Then, I can create a tail node to point at the smaller of the two heads, either list1 or list2. I point dummy at the same node, whichever is smaller (will be the head)
+
+If it points at list1, I want to check which node is less, the next node, or the head of the other list
+    - if the next node is less, I move tail to the next node
+    if (list1.next <= list2) {
+        list1 = list1.next;
+        tail = list1;
+    }
+    - if the head of the other list is less
+        - I store the next node in a tmp var
+        const tmp = list1.next;
+        - I point the currentl list's next to the head of the other list
+        list1.next = list2;
+        - I set list1 to the tmp variable
+        list1 = tmp;
+    - Each loop I can check which one is 
+
+Dummy() ->     (1)  (2) 
+                \  /   \
+                (1)    (3) -> list2(4) -> list1(4)
+
+Dummy(), Tail() -> startNode(1) -> (2) -> (4) -> null
+
+                   otherNode(1) -> (3) -> (4) -> null
+
+*/
