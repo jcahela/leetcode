@@ -91,3 +91,72 @@ var largestRectangleArea = function(heights) {
 
   return largestRectangle;
 };
+
+/************************ Attempt #2 easy, fast ~20 mins ***************************/
+/**
+
+Use a monotonic increasing stack that keeps track of heights that could have their areas calculated forward in the heights array
+
+[[0,2], [1,1]] -> [[0,1]]
+
+1-0 * 2 = 2
+
+After putting it onto the stack, any heights that were popped from the stack should have their index saved in the array that was just pushed, because theoretically the height that was pushed from the stack could go backwards to any larger heights before it
+
+At the end, you'll then calculate the monotonic increasing stack heights and what their area would be if it went to the end of the heights array
+
+Pseudocode:
+
+1. Instantiate a stack at []
+2. Instantiate a largestRect var at 0
+3. Iterate through the heights array
+    1. if the stack is empty
+        1. Push the current height onto the stack with its index as a tuple ([index, height])
+    2. Else
+        1. Instantiate a lastPoppedHeightIndex var with let at the current index
+        2. While the current height is smaller than the height at the top of the stack
+            1. Pop the top tuple from the stack and store its first value as topIndex and second value as topHeight
+            2. Calculate the area as currentIndex - topIndex for width, and topHeight as height
+            3. Replace largestRect with that calculated area if the calculated area is greater than the current largestRect
+            4. Set lastPoppedHeightIndex as topIndex
+        3. Add the current height onto the stack as a tuple, but use lastPoppedHeightIndex as its index, so its height can be calculated up to the end of the array from that lastPoppedHeightIndex: [lastPoppedHeightIndex, currentHeight]
+4. Iterate through the stack
+    1. Store the current tuple's first value as currentIndex and second value as currentHeight
+    2. Calculate the area with the height being currentHeight, and the width being heights.length - currentIndex
+    3. Set largestRect to the above calculated area if the above calculated area is greater than largestRect
+5. Return largestRect
+
+Time complexity: O(h) - Where h is the length of the heights array. Since we iterate through heights once, and only backtrack to make sure the stack is constantly increasing, then iterate through the remainder of increasing heights in the stack after the original looo, that is all a coefficient of h and not an order of magnitude greater, so it simplifies to O(h)
+
+Space complexity: O(h) - Where h is the length of the heights array. If the heights array is constantly increasing, the stack would hold h amount of items
+
+ */
+
+function largestRectangleArea(heights: number[]): number {
+    const stack = [];
+    let largestRect = 0;
+    for (let i = 0; i < heights.length; i += 1) {
+        if (!stack.length) {
+            stack.push([i, heights[i]]);
+        } else {
+            let lastPoppedHeightIndex = i;
+            while (stack.length && heights[i] < stack[stack.length - 1][1]) {
+                const [topIndex, topHeight] = stack.pop();
+                const poppedArea = (i - topIndex) * topHeight;
+                console.log(topIndex);
+                largestRect = Math.max(largestRect, poppedArea);
+                lastPoppedHeightIndex = topIndex;
+            }
+
+            stack.push([lastPoppedHeightIndex, heights[i]]);
+        }
+    }
+
+    for (let i = 0; i < stack.length; i += 1) {
+        const [backtrackedIndex, backtrackedHeight] = stack[i];
+        const backtrackedArea = (heights.length - backtrackedIndex) * backtrackedHeight;
+        largestRect = Math.max(largestRect, backtrackedArea);
+    }
+
+    return largestRect;
+};
