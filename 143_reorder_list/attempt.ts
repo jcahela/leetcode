@@ -149,3 +149,175 @@ Goal3: Now we have head and reversedListHead, we can merge the two:
   if (head) tail.next = head;
   if (reversedListHead) tail.next = reversedListHead;
 };
+
+/********************** Attempt 2 - forgot tortoise and hare to find the middle *********************/
+
+/*
+
+In order to reorder the list, I will need to do a few things:
+
+- Be able to traverse from the head to the middle
+- Be able to traverse from the end to the middle
+
+While traversing both of the above, alternate where each points to to create the reordered list
+
+Therefore, I need to cut the list in half, then reverse the second half, then splice them together using a dummy node to hold the head of the spliced list
+
+How do I find the middle?
+
+(1) -> (2) -> (3) -> (4) -> (5)
+
+(1) -> (5) -> (2) -> (4) -> (3)
+
+I could traverse the whole thing and count how many nodes there are:
+
+5
+
+Then, get the ceiling of the result divided by 2: Math.ceil(5 / 2) = 3
+
+Then, traverse through the list again, and decrement the divided result, until the divided result is 0
+
+0
+
+dummy() -> (1) -> (2) -> tail(3) -> (4) -> (5)
+
+Once I get to that point, I store the next of curr in a var (l2), then I set next of curr to be null
+
+l1 = dummy.next; // (1) -> (2) -> (3) -> null
+l2; // (4) -> (5) -> null
+
+Then, I reverse l2
+
+l2Reversed = (5) -> (4)
+
+Alternate between the two using an alternating variable or something:
+addingL1 = true;
+
+Then, I set a tail and dummy, and go while l1 and l2Reversed is not null:
+    if (addingL1) {
+        Add l1 to the tail
+        Set l1 to l1.next
+        Set tail to be tail.next
+        addingL1 = false;
+    } else {
+        Add l2 to the tail
+        Set l2 to l2.next
+        Set tail to be tail.next
+        addingL1 = true;
+    }
+
+Then, if either l1 or l2 is still truthy, add that to the tail, and return the dummy.next head node
+
+Pseudocode:
+// Find the length of the list
+1. Instantiate a dummy node at new ListNode()
+2. Instantiate a tail node that = dummy
+3. Set tail.next to head (which sets dummy's .next to head too)
+3. Instantiate a count var at 0
+4. While tail
+    1. Set tail to be tail.next
+    2. Add 1 to count
+
+// Find the middle using the count, store the second half in a variable
+5. Instantiate an l2 that's empty
+6. Reset tail to = dummy
+7. While count > 0
+    1. Subtract 1 from count
+    2. Set tail to be tail.next
+8. Set l2 to be tail.next
+9. Set tail.next to be null
+
+// Reverse the second half
+10. Instantiate a prev var at null
+12. While l2
+    1. Store l2.next in a temp var
+    2. Set l2.next to be prev
+    3. Set prev to be l2
+    4. Set l2 to be the temp var
+
+// Use tail and prev to splice together the lists
+13. Set tail to be dummy
+14. Instantiate an l1 var to be dummy.next
+15. Instantiate an l2 var to be prev
+16. Instantiate a var called addingL1 to true
+17. While l1 && l2
+    1. if addingL1
+        1. tail.next = l1
+        2. l1 = l1.next
+        3. addingL1 = false
+    2. Else
+        1. tail.next = l2
+        2. l2 = l2.next
+        3. addingL1 = true
+    3. tail = tail.next
+18. If l1 is truthy
+    1. Add l1 to the end of tail: tail.next = l1
+19. If l2 is truthy
+    1. Add l2 to the end of tail: tail.next = l2
+20. Return dummy.next
+
+*/
+
+function reorderList(head: ListNode | null): void {
+    // Find the length of the list
+    const dummy = new ListNode();
+    let tail = dummy;
+    tail.next = head;
+    let count = 0;
+
+    while (tail) {
+        tail = tail.next;
+        count += 1
+    }
+
+    // Find the middle using the count, store the second half in a variable
+    let l2;
+    tail = dummy;
+    tail.next = head;
+    let halfway = Math.ceil(count / 2);
+    console.log(halfway)
+    while (halfway > 1) {
+        halfway -= 1;
+        tail = tail.next;
+    }
+    // console.log(tail);
+    
+    // Reverse the second half
+    l2 = tail.next;
+    tail.next = null;
+
+    let prev = null;
+    while (l2) {
+        const temp = l2.next;
+        l2.next = prev;
+        prev = l2;
+        l2 = temp;
+    }
+    
+    // Use tail and prev to splice together the lists
+    tail = dummy;
+    let l1 = dummy.next;
+    l2 = prev;
+    let addingL1 = true;
+    
+    while (l1 && l2) {
+        if (addingL1) {
+            tail.next = l1;
+            l1 = l1.next;
+            addingL1 = false;
+        } else {
+            tail.next = l2;
+            l2 = l2.next;
+            addingL1 = true;
+        }
+        tail = tail.next;
+    }
+
+    if (l1) {
+        tail.next = l1;
+    }
+
+    if (l2) {
+        tail.next = l2;
+    }
+};
