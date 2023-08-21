@@ -76,3 +76,62 @@ function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
 
   return dummy.next;
 };
+
+/******************* Attempt #2 calculate length of list and use the diff ********************/
+
+/*
+
+I could count the number of nodes in the list
+Then subtract that count by n to get the number of nodes the skipped node would be from the front
+Then traverse through and skip that node
+
+Pseudocode:
+// Get the length of the list
+1. Instantiate a count var at 0
+2. Instantiate a dummy node at new ListNode
+3. Instantiate a tail at dummy
+4. Set tail.next to be head
+5. While tail
+    1. tail = tail.next
+    2. count += 1
+
+// Get the difference of the length of the list and n
+6. Instantiate a diff var at count - n
+
+// Traverse from head again and stop at the node before the skipped node
+7. set tail = dummy
+8. while diff > 0
+    1. Set tail = tail.next
+    2. diff -= 1
+9. Set tail.next = tail.next.next
+10. Return dummy.next
+
+Time complexity: O(n) - Since I'm traversing through the list n + c(n), where n is the length of the list, and c is the node before the skipped node, which should always result in a second traversal less than n. Together, it simplifies to O(n)
+
+Space complexity: O(1) - Since I'm only using pointers
+
+*/
+
+function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
+    let count = 0;
+    const dummy = new ListNode();
+    let tail = dummy;
+    tail.next = head;
+    while (tail.next) {
+        tail = tail.next;
+        count += 1;
+    }
+
+    let diff = count - n;
+
+    tail = dummy;
+
+    while (diff > 0) {
+        tail = tail.next;
+        diff -= 1;
+    }
+    
+    tail.next = tail.next.next;
+
+    return dummy.next;
+};
