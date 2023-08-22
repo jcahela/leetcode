@@ -1,55 +1,50 @@
+/* Don't know how to detect a cycle */
+
+/***************** Attempt #2 - Floyd's algorithm - easy *****************/
+
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+
+I can use Floyd's algorithm to determine if there's a cycle
+    - Start slow and fast pointers at the first node
+    - While fast && fast.next (ensures that I stop if fast is null, or if fast.next is null, so that I can always do fast.next.next within the loop)
+        - increment slow by 1,
+        - increment fast by 2
+    If slow node ever equals fast node, return true
+At the end, return false (since we escaped the above loop, fast became null at some point, and never equaled slow)
+
+Pseudocode:
+1. Instantiate a slow var at head
+2. Instantiate a fast var at head
+3. While fast && fast.next
+    1. Set slow = slow.next;
+    2. Set fast = fast.next.next;
+    3. if slow === fast
+        1. Return true
+4. Return false
+
+Time complexity: O(n) - Since if there isn't a cycle, I only traverse the list through once, and if there is a cycle, it simplifies down to a coefficient of n as its time complexity
+
+Space complexity: O(1) - Since I'm only using pointers
+ */
+
 function hasCycle(head: ListNode | null): boolean {
-  if (!head?.next) return false;
   let slow = head;
   let fast = head;
 
-  while (fast) {
+  while (fast && fast.next) {
       slow = slow.next;
-      fast = fast.next?.next;
-      if (slow === fast) {
-          return true
-      }
+      fast = fast.next.next;
+      if (slow === fast) return true;
   }
+  
   return false;
 };
-
-class ListNode {
-  prev: ListNode | null;
-  next: ListNode | null;
-  key: number;
-  val: number;
-
-  constructor(key: number, val: number) {
-      this.key = key;
-      this.val = val;
-      this.prev = null;
-      this.next = null;
-  }
-}
-
-class LRUCache {
-  capacity: number;
-  cache: object;
-  left: ListNode;
-  right: ListNode;
-
-  constructor(capacity: number) {
-      this.capacity = capacity;
-      this.cache = {};
-      // the LRUCache left ListNode points at the least recently used ListNode
-      this.left = new ListNode(0,0);
-      // the LRUCache right ListNode points at the most recently used ListNode
-      this.right = new ListNode(0,0);
-      this.left.next = this.right;
-      this.right.prev = this.left;
-  }
-
-  get(key: number): number {
-
-  }
-
-  put(key: number, value: number): void {
-      this.cache[key] = new ListNode(key, value);
-      let prev = this.right.prev;
-  }
-}
