@@ -61,3 +61,70 @@ function findDuplicate(nums: number[]): number {
       if (slow === fast) return slow;
   }
 };
+
+/**************** Attempt #2 floyd's algorithm + finding beginning of a cycle with floyd's algorithm *******************/
+
+/*
+
+Using only constant space, I can't keep a hashmap of each number and use that to detect duplicates, so I have to only use pointers
+
+Since the array of integers contains n + 1 integers, and each integer is within range of 1 and n (inclusive), that means each number can point to an index that exists in the array
+
+So I could consider each number a pointer to another index, and their index as the value
+
+I could consider this a linked list and if there's a duplicate, that means two different integers point to the same index
+
+vals:      0 1 2 3 4
+pointers: [1,3,4,2,2]
+
+                      sf
+(0) -> (1) -> (3) -> (2) -> (4)
+                      |______|
+
+If two different integers point to the same index, that means there's a cycle in the list at some point, because on a non-cycle list, only one node points to certain node, by definition/nature
+
+I'd have to find if a cycle exists, then find the start of that cycle
+
+Using Floyd's algorithm, I can find the point where they equal each other, then reset slow to 0, and go through the list from the point of the repeated number up to the point where they equal each other again. That is the duplicate
+
+Pseudocode:
+1. Instantiate a slow pointer at 0
+2. Instantiate a fast pointer at 0
+3. while true
+    1. slow = nums[slow];
+    2. fast = nums[nums[fast]];
+    3. if (slow === fast) break;
+4. slow = 0;
+4. while true
+    1. slow = nums[slow];
+    2. fast = nums[fast];
+    3. if (slow === fast) return slow; (this should be the duplicate number, since we're using the indices as the values of the nodes)
+
+Time complexity: O(n) - Since I'm traversing through the list in a coefficient of n to find the cycle, then from 0 to that duplicate in length to find the duplicate. This simplifies to O(n)
+
+Space complexity: O(1) - Since I'm only using pointers
+
+*/
+//                f
+//                s   
+// vals:      0 1 2 3 4
+// pointers: [1,3,4,2,2]
+
+function findDuplicate(nums: number[]): number {
+    let slow = 0;
+    let fast = 0;
+
+    while (true) {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        if (slow === fast) break;
+    }
+
+    slow = 0;
+
+    while (true) {
+        if (slow === fast) return slow;
+        slow = nums[slow];
+        fast = nums[fast];
+    }
+};
