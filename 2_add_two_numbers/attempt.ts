@@ -164,3 +164,94 @@ function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | nul
   return answerMap[sum.length - 1];
   
   };
+
+  /********************** Attempt #2 - using simplified method, only requiring a single traversal ******************************/
+
+  // REMEMBER: using a dummy node and adding each newly created node to it as its made can save on space complexity
+  /**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+
+l1 = [2,3,8,9,1]
+l2 = [5,6,4]
+
+num1 = 19832
+num2 = 465
+11 
+19832
+  465
+------
+20297
+
+I could consider null nodes to be 0, and continue adding, in case I have leftover from the last sum where both l1 and l2 were non null
+
+(7) -> (0) -> (8) -> (1) -> (1)
+
+Output is the sum of the two numbers, but maintaining its reversal
+
+If I iterate through both lists at the same time, I could add the two nodes together + leftover
+    - fist have a var called leftover starts at 0
+    - if the sum >= 10, I need to carry the 1, so 19 total % 10 = 1 leftover, 9 sum
+    - Then, create a node with the val as the sum or 9 (if there was leftover), and store it in an array
+
+Once done, I should have an array filled with nodes, I could iterate through the array and point each node at the next, or null at the end
+
+Then, return the first node in the array
+
+Pseudocode:
+1. Instantiate a nodeArray at []
+2. Instantiate a leftover var at 0 (this will hold remainders of additions greater than 10)
+3. While l1 or l2
+    1. Instantiate addend1 var at l1 or 0 (if l1 is null, set its addend to be 0)
+    2. Instantiate addend2 var at l2 or 0 (if l2 is null, set its addend to be 0)
+    3. Instantiate a sum var at 0;
+    4. If addend1 + addend2 > 10
+        1. sum = (addend1 + addend2 + leftover) % 10
+        2. leftover = Math.floor((addend1 + addend2 + leftover) / 10) (floor division of 10)
+    5. Else
+        1. sum = addend1 + addend2 + leftover
+    6. Create a node from the sum, and push to the nodeArray
+    7. If l1 is truthy, increment l1
+    8. If l2 is truthy, increment l2
+4. Iterate over nodeArray up to the 2nd to last node
+    1. Set the current node's next to point to the next node in the array
+5. Return the first node in the nodeArray
+
+Time complexity: O(n) - Where n is the length of the longer list. Since I'm iterating through the node lists once, at the same time until they are both falsy
+
+Space complexity: O(n) - Where n is the length of the longer list. Since I'm adding the two lists together and storing the result nodes in the array to iterate over later, I'm storing the longer list in that array, since the longer of the two lists dictates how long the sum list will be
+
+ */
+
+function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+    const nodeArray = [];
+    let leftover = 0;
+
+    while (l1 || l2) {
+        const addend1 = l1 ? l1.val : 0;
+        const addend2 = l2 ? l2.val : 0;
+        let sum = 0;
+        sum = (addend1 + addend2 + leftover) % 10;
+        leftover = Math.floor((addend1 + addend2 + leftover) / 10);
+        nodeArray.push(new ListNode(sum));
+        if (l1) l1 = l1.next;
+        if (l2) l2 = l2.next;
+    }
+
+    if (leftover > 0) {
+        nodeArray.push(new ListNode(leftover))
+    }
+
+    for (let i = 0; i < nodeArray.length - 1; i += 1) {
+        nodeArray[i].next = nodeArray[i + 1];
+    }
+
+    return nodeArray[0];
+};
