@@ -229,3 +229,52 @@ class TimeMap {
  * obj.set(key,value,timestamp)
  * var param_2 = obj.get(key,timestamp)
  */
+
+/**************** Attempt #3 - good, easy, fast ******************/
+class TimeMap {
+    dict: object;
+    
+    constructor() {
+        this.dict = {};
+    }
+
+    set(key: string, value: string, timestamp: number): void {
+        this.dict[key] ? this.dict[key].push([timestamp, value]) : this.dict[key] = [[timestamp, value]];
+    }
+
+    get(key: string, timestamp: number): string {
+        // check if the key exists in the dict, if not return ""
+        if (!this.dict[key]) return "";
+
+        // if the key does exist in dict, check if it exists at the timestamp using binary search
+        let l = 0;
+        let r = this.dict[key].length - 1;
+        const timestamps = this.dict[key];
+
+        let largestTimestampPrev: [number, string] = [-1, ""];
+
+        while (l <= r) {
+            const m = Math.ceil((l + r) / 2);
+
+            if (timestamp < timestamps[m][0]) {
+                r = m - 1;
+            } else if (timestamp > timestamps[m][0]) {
+                // store the timestamp at m if that timestamp is greater than the currently saved largestTimestampPrev's timestamp (since it's still less than the target timestamp)
+                largestTimestampPrev = largestTimestampPrev[0] < timestamps[m][0] ? timestamps[m] : largestTimestampPrev;
+                l = m + 1;
+            } else {
+                return timestamps[m][1];
+            }
+        }
+
+        return largestTimestampPrev[1];
+
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * var obj = new TimeMap()
+ * obj.set(key,value,timestamp)
+ * var param_2 = obj.get(key,timestamp)
+ */
