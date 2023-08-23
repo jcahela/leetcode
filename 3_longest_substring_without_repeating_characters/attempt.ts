@@ -63,3 +63,67 @@ function lengthOfLongestSubstring(s: string): number {
 
   return max;
 };
+
+/************** Attempt #2 fast, easy, kinda clean code ****************/
+
+/*
+
+Use a sliding window and hashmap to hold the letters in the current window
+whenever you're at a letter that's in the hashmap already, it's not valid anymore, so remove the letter from the left pointer then increment left, and continue until the letter that was just incremented is back to 1
+
+Pseudocode:
+1. Instantiate a left pointer at 0
+2. Instantiate a right pointer at 0
+3. Instantiate a max var at 0
+4. Instantiate a letterMap at {}
+5. While r < s.length
+    1. Check if the letter at right exists in the map
+        1. If so, increment the count at that letter in the map
+        2. Then, while the count at that letter in the map is > 1
+            1. Decrement the letter at l
+            2. If the count of the letter at l is now 0, delete that letter from the map
+            2. Increment l
+    2. At this point, you should have a valid window, so set max to be Math.max(r - l + 1);
+    3. Increment r
+6. Return the max var
+
+Time complexity: O(n) - Since we're only traversing forward through s once with the sliding window
+Space complexity: O(m) - Where m is the number of unique characters in s, since we store a letter count of each letter in s
+
+*/
+/*
+{
+    'b': 1,
+    'c': 1
+}
+*/
+//              r
+//            l
+//  0 1 2 3 4 5 6 7
+// "a b c a b c b b"
+
+function lengthOfLongestSubstring(s: string): number {
+    let l = 0;
+    let r = 0;
+    let max = 0; // 3
+    const counts = {};
+
+    while (r < s.length) {
+        if (counts[s[r]]) {
+            counts[s[r]] += 1;
+
+            while (counts[s[r]] > 1) {
+                counts[s[l]] -= 1;
+                if (counts[s[l]] === 0) delete counts[s[l]];
+                l += 1;
+            }
+        } else {
+            counts[s[r]] = 1;
+        }
+
+        max = Math.max(max, (r - l + 1));
+        r += 1;
+    }
+
+    return max;
+};
