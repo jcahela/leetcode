@@ -122,3 +122,99 @@ function minEatingSpeed(piles: number[], h: number): number {
 
   return minK
 };
+
+/********************* Attempt #2 - easier, able to reason out better *********************/
+
+/*
+
+The most bananas koko can eat in an hour regardless of how much time she has is the largest pile in the piles array
+if she eats that amount of bananas, she'll eat the rest of the piles within the number of hours as there are piles
+This is the minimum time that she'll be given, because of the constraint piles.length <= h
+
+The least bananas koko can eat in an hour regardless of how much time she has is 1. If given enough hours, that's the slowest
+
+So, I need to find the minimum amount of bananas eaten per hour such that she eats all piles with h hours
+
+Simplifying the problem, how would I find how many hours it'd take her to eat a specific piles list with a given k?
+
+piles = [3,6,7,11]
+
+k = 5
+
+let hours = 0;
+
+for (const pile of piles) {
+    // if pile is > 5, say pile is 8, 8 / 5 = 1.3something which would take 2 hours to eat, so round up. If pile is 12, it's 2.2something, which takes 3 hours to eat, so round up
+    hours += Math.ceil(pile / k);
+}
+
+return hours;
+
+If between 1 and 30, and I choose 15 as the first one to check. If 15 is eaten within h hours, it could possibly not be the minimum, so if the hours to eat at k is >= h, I go left
+
+const hoursAtM = calculateHours(k);
+
+if (hoursAtM < h) {
+    l = m + 1;
+} else {
+    r = m - 1;
+    minimum = Math.min(mininum, k);
+}
+
+Pseudocode:
+1. Instantiate a minimum var at Infinity (since I'm guaranteed to find a good k between 1 and max(piles), this will be replaced at some point during the binary search)
+2. Instantiate an l var at 1
+3. Instantiate an r var at Math.max(...piles);
+4. Define a calculateHours function that takes in a k
+    1. Instantiate an hours var at 0
+    2. Iterate over piles
+        1. At each pile, add to hours Math.ceil(pile / k);
+    3. Return hours
+5. While l <= r
+    1. Calculate k at Math.ceil((l + r) / 2);
+    2. Calculate hours at calculateHours(k)
+    3. if hours > h needed
+        1. Koko is eating too slow, so I need to check a larger k
+        2. l = k + 1
+    3. else (hours <= h needed)
+        1. Either Koko is eating too fast and needs a smaller eating rate k checked, but is still within the hours h, so go down r = k - 1, or Koko is eating just right but there's a smaller k that is also just right (the minimum k that finishes all piles in h hours), so also go down r = k - 1. Either of these scenarios would replace k as the minimum, so go to step 2
+        2. Set minimum to be the smaller between whatever it currently is, and the current k. (since if hours is greater than h, it'll be replaced by a smaller k whose calculated hours is equal to h, and since if it already is = h, I need to make sure the k I have that has the correct h is the smallest I've found, and store that one)
+6. Return minimum
+
+Time complexity: O(p + log(max(p))) - Since I'm getting the max pile with a linear operation of piles, and since I'm using binary search from 1 to the amount of that max pile (max(p)), the overall time complexity is O(p + log(max(p)))
+
+Space complexity: O(1) - since I'm only using pointers
+
+*/
+
+// [3,6,7,11]
+// h = 8
+// 4
+
+function minEatingSpeed(piles: number[], h: number): number {
+    let minimum = Infinity;
+    let l = 1;
+    let r = Math.max(...piles); // 11
+
+    function calculateHours(k) {
+        let hours = 0; // 6
+        for (const pile of piles) {
+            hours += Math.ceil(pile / k);
+        }
+        return hours;
+    }
+
+    while (l <= r) {
+        const k = Math.ceil((l + r) / 2); // 6
+        const hours = calculateHours(k);
+
+        if (hours <= h) {
+            minimum = Math.min(minimum, k);
+            r = k - 1;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return minimum;
+};
