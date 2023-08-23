@@ -258,3 +258,110 @@ function checkInclusion(s1: string, s2: string): boolean {
 
     return false;
 };
+
+/****************** Attempt #3 - Using alphabet array with charCodeAt *********************/
+
+/*
+
+I need two alphabet arrays for s1 and s2 to count how many letter counts each have
+
+I need to have a matches that could at most be 26, if there are 26 matches, then s2 window is a permutation of s1
+
+each iteration of a window, check if matches is 26, if it is, return true
+
+increment right, add 1 to the count for the letter at right in s2 counts
+    if the letter at right in s2 counts is now equal the letter at right in s1 counts, you've gained a match, add 1 to matches
+    if the letter at right in s2 counts is now greater than the letter at right in s1 counts, you've lost a match, subtract 1 from matches
+
+subtract 1 from the count for the letter at left in s2 counts, increment left
+    if the letter at left in s2 counts is now 1 less than the letter at left in s1 counts, you've lost a match, subtract 1 from matches
+    if the letter at left in s2 counts is now equal to the letter at left in s1 counts, you've gained a match, add 1 to matches
+
+[1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+[1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+matches = 26
+
+"a d d"
+
+     l   r
+"e d d d a o o o"
+
+Pseudocode:
+1. Instantiate an s1Counts array that has 26 slots with 0 in each slot
+2. Instantiate an s2Counts array that has 26 slots with 0 in each slot
+3. Iterate through s1
+    1. At each index, add the letter at s1's charCodeAt(0) - 'a'.charCodeAt(0) to get the index to increment, then add that to s1 count
+    2. At the same time, add the letter at s2's charCodeAt(0) - 'a'.charCodeAt(0) to get the index to increment, then add that to s2 count
+4. Instantiate a matches var at 0
+5. Iterate through s1Counts
+    1. if the current index in s1Counts === the current index in s2Counts, increment matches
+6. Instantiate a left pointer at 0
+7. Instantiate a right pointer at s1.length - 1
+8. While r < s2.length
+    1. Check if matches is 26, if so return true
+    2. Increment right pointer
+    3. Add 1 to the count for the letter at right in s2Counts
+    4. If the letter at right in s2Counts is equal the letter at right in s1Counts:
+        1. You've gained a match, increment matches
+    5. If the letter at right in s2Counts is now greater than the letter at right in s1Counts:
+        1. You've lost a match, decrement matches
+    6. Subtract 1 from the count for the letter at left in s2Counts
+    7. If the letter at left in s2Counts is now less than the letter at left in s1Counts:
+        1. You've lost a match, decrement matches
+    8. If the letter at left in s2Counts is now equal the letter at left in s1Counts:
+        1. You've gained a match, increment matches
+    9. Increment left pointer
+9. Return matches === 26
+
+Time complexity: O(n) - where n is the length of s2. Since we calculate matches before the loop, and only use O(1) operations to increment and decrement letters at their indices within the s1Counts and s2Counts arrays, the overall time complexity is O(n)
+
+Space complexity: O(52) - Since we store 2 26 item arrays to use for counts
+
+*/
+
+function checkInclusion(s1: string, s2: string): boolean {
+    if (s2.length < s1.length) return false;
+    const s1Counts = Array.from({ length: 26 }, () => 0);
+    const s2Counts = Array.from({ length: 26 }, () => 0);
+    for (let i = 0; i < s1.length; i += 1) {
+        s1Counts[s1[i].charCodeAt(0) - 'a'.charCodeAt(0)] += 1;
+        s2Counts[s2[i].charCodeAt(0) - 'a'.charCodeAt(0)] += 1;
+    }
+
+    let matches = 0;
+    for (let i = 0; i < s1Counts.length; i += 1) {
+        if (s1Counts[i] === s2Counts[i]) matches += 1;
+    }
+
+    let l = 0;
+    let r = s1.length - 1;
+
+    while (r < s2.length - 1) {
+        if (matches === 26) return true;
+        r += 1;
+        const rightIndex = s2[r].charCodeAt(0) - 'a'.charCodeAt(0);
+        s2Counts[rightIndex] += 1;
+        
+        if (s2Counts[rightIndex] === s1Counts[rightIndex]) {
+            matches += 1;
+        }
+        if (s2Counts[rightIndex] === (s1Counts[rightIndex]) + 1) {
+            matches -= 1;
+        }
+
+        const leftIndex = s2[l].charCodeAt(0) - 'a'.charCodeAt(0);
+
+        s2Counts[leftIndex] -= 1;
+
+        if (s2Counts[leftIndex] === s1Counts[leftIndex]) {
+            matches += 1;
+        }
+        if (s2Counts[leftIndex] === (s1Counts[leftIndex]) - 1) {
+            matches -= 1;
+        }
+
+        l += 1;
+    }
+    return matches === 26;
+};
