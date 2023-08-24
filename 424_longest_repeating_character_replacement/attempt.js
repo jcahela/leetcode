@@ -206,45 +206,74 @@ Space complexity: O(u) - Where u is the number of unique letters in the string s
 
 */
 
+/******************** Attempt #3 - good, optimal, sliding window approach ***********************/
+
+/*
+
+I need to keep track of the max letter each window, since window length - max letter must be >= k for the window to be valid
+
+Have a hashmap that holds the letter counts for the current window
+
+Go through the map and find the max letter in the current window
+
+Add letter at r to hashmap
+Calculate maxLetter in current hashmap
+While window length - maxLetter count > k
+    decrement the count at the letter of l
+    increment l
+    replace max letters
+At this point, it's a valid window, so replace the var for maxSubstring if it's more
+Increment r
+
+Pseudocode:
+1. Instantiate a left pointer at 0
+2. Instantiate a right pointer at 0
+3. Instantiate a sCounts at {}
+4. Instantiate maxSubstring at 0
+5. While r < s.length
+    1. Add current letter at r to the hashmap at 1, if exists increment by 1
+    2. Instantiate maxLetter at 0;
+    3. Iterate over keys of sCounts
+        1. Set maxLetter to be the max between maxLetter at the current count
+    4. While (windowLength - maxLetter > k)
+        1. decrement the count at letter of l
+        2. increment l
+        3. recalculate maxLetter
+    5. replace maxSubstring if the current window is larger than it
+    6. Increment r
+6. Return maxSubstring
+
+Time complexity: O(26(n)) - Since I calculate maxLetter every time I shift the window, it would do 26 calculations max per hashmap loop (26 max letters) and it would be multiplied by a coefficient of n (since I do it every time I shift the window's left or right pointers)
+
+Space complexity: O(1) - Since I only use pointers and since the max space of the hashmap is 26 for each unique letter in the alphabet
+
+*/
+
 function characterReplacement(s: string, k: number): number {
-    let mostFrequent;
-    let mostFrequentCount = 0;
-
-    const counts = {}
-
     let l = 0;
     let r = 0;
-
-    let longestSubstring = 0;
+    let sCounts = {};
+    let maxSubstring = 0;
 
     while (r < s.length) {
-        counts[s[r]] ? counts[s[r]] += 1 : counts[s[r]] = 1;
-        if (counts[s[r]] > mostFrequentCount) {
-            mostFrequent = s[r];
-            mostFrequentCount = counts[s[r]];
+        sCounts[s[r]] ? sCounts[s[r]] += 1 : sCounts[s[r]] = 1;
+        let maxLetter = 0;
+
+        for (const letter of Object.keys(sCounts)) {
+            maxLetter = Math.max(maxLetter, sCounts[letter]);
         }
 
-        let windowWidth = r - l + 1;
-
-        if (windowWidth - mostFrequentCount <= k) {
-            longestSubstring = Math.max(longestSubstring, windowWidth);
-        } else {
-            counts[s[l]] -= 1;
+        while ((r - l + 1) - maxLetter > k) {
+            sCounts[s[l]] -= 1;
             l += 1;
-
-            windowWidth = r - l + 1;
-            for (const letter of Object.keys(counts)) {
-                mostFrequent = null;
-                mostFrequentCount = 0;
-                if (counts[letter] > mostFrequentCount) {
-                    mostFrequent = letter;
-                    mostFrequentCount = counts[letter];
-                }
+            for (const letter of Object.keys(sCounts)) {
+                maxLetter = Math.max(maxLetter, sCounts[letter]);
             }
         }
 
+        maxSubstring = Math.max(maxSubstring, (r - l + 1));
         r += 1;
     }
 
-    return longestSubstring;
+    return maxSubstring;
 };
