@@ -87,3 +87,80 @@ Space complexity: O(h) - where h is the max height of the tree, since we're usin
 
 //     return levels;
 // }
+
+/************************* Attempt #2 good, fast, recursive, iterative DFS, iterative BFS ******************************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+       (3)
+       / \
+     (9) (20)
+         /  \
+       (15) (7)
+
+I could use recursive DFS and when I get to null, return 0.
+In the recursive step, I could add 1 to the recursive call of the left and right
+Then, in the recursive return, I could return the max between the left and right subtree depth
+
+That way, I always add the max of each subtree to the parent node, then that parent node returns the max of that + 1
+
+Pseudocode:
+1. If root is null, return 0
+2. return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+
+Time complexity: O(n) - Where n is the number of nodes in the tree
+Space complexity: O(h) - For recursive DFS
+
+[[(3), 1]]
+
+ */
+
+// Recursive DFS
+function maxDepth(root: TreeNode | null): number {
+    if (root === null) return 0;
+  
+    return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+  };
+
+// Iterative DFS
+function maxDepth(root: TreeNode | null): number {
+    if (!root) return 0;
+    let maxLevel = 1;
+    const stack: [TreeNode, number][] = [[root, 1]];
+  
+    while (stack.length) {
+      const [node, level] = stack.pop();
+      maxLevel = Math.max(level, maxLevel);
+      if (node.left) stack.push([node.left, level + 1]);
+      if (node.right) stack.push([node.right, level + 1]);
+    }
+  
+    return maxLevel;
+  };
+
+// Iterative BFS
+function maxDepth(root: TreeNode | null): number {
+if (!root) return 0;
+let maxLevel = 1;
+const queue: [TreeNode, number][] = [[root, 1]];
+
+while (queue.length) {
+    const [node, level] = queue.shift();
+    maxLevel = Math.max(level, maxLevel);
+    if (node.left) queue.push([node.left, level + 1]);
+    if (node.right) queue.push([node.right, level + 1]);
+}
+
+return maxLevel;
+};
