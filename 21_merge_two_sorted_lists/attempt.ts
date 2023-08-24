@@ -125,3 +125,53 @@ Dummy(), Tail() -> startNode(1) -> (2) -> (4) -> null
                    otherNode(1) -> (3) -> (4) -> null
 
 */
+
+/******************* Attempt 3 - easy, fast, optimal, using dummy node ********************/
+
+/*
+
+I could have a dummy node that points at what will become the head of the linked list
+
+Then use a tail node to traverse through the two merge lists, and point its next pointer to whichever of the two heads is smaller, then increment the tail node to keep attaching the next node to the end
+
+Pseudocode:
+1. Instantiate a dummy node that's empty
+2. Instantiate a tail node thats = dummy node
+3. While list1 and list2 (once one of them is empty, stop adding nodes to tail)
+    1. if list1's val is less than or equal to list2's val
+        1. Set tail.next to be list1
+        2. Set list1 to be list1.next
+    2. Else (list2 is less)
+        1. Set tail.next to be list2
+        2. Set list2 to be list2.next
+    3. Set tail to be tail.next
+4. If list1 is truthy, tack it onto the end of tail
+5. If list2 is truthy, tack it onto the end of tail
+6. Return dummy.next
+
+Time complexity: O(l1 + l2) - At worst I could have to iterate through both list1 and list2 to add every node onto the end of tail, and list1 and list2 become falsy at the same time, causing a traversal of both at the same time
+
+Space complexity: O(1) - Since I'm only using pointers and saving dummy nodes in a variable
+
+*/
+
+function mergeTwoLists(list1: ListNode | null, list2: ListNode | null): ListNode | null {
+    const dummy = new ListNode();
+    let tail = dummy;
+
+    while (list1 && list2) {
+        if (list1.val <= list2.val) {
+            tail.next = list1;
+            list1 = list1.next;
+        } else {
+            tail.next = list2;
+            list2 = list2.next;
+        }
+        tail = tail.next;
+    }
+
+    if (list1) tail.next = list1;
+    if (list2) tail.next = list2;
+
+    return dummy.next;
+};
