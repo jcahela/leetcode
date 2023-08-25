@@ -336,3 +336,119 @@ function minWindow(s: string, t: string): string {
         return s.slice(minL, minR + 1);
     }
 };
+
+/***************** Attempt #3 - successful, but bugs due to keys in hashmap === 0 which were falsy, I need a better way to check if keys exist in the hashmap, regardless of whether their values are falsy ********************/
+
+/*
+When checking for the existence of keys, to avoid the bugs you keep encountering, use object prototype method hasOwnProperty: object1.hasOwnProperty(keyToCheck)
+
+Use a sliding window, and have a hashmap that holds the count of letters in t, and the count of letters in the sWindow
+
+I keep incrementing the right pointer until I find a valid window: a window that contains all of t
+
+    while that is true, increment the left pointer, and replace the minimum window substring indices as the window shrinks
+    once the window doesn't contain all of t, start increment r until it's true again
+
+How to find a valid window? Have two hashmaps that contain the keys of unique letters in t
+
+tMap = {
+    'A': 1,
+    'B': 1,
+    'C': 1
+}
+
+sMap = {
+    'A': 1,
+    'B': 0,
+    'C': 0
+}
+
+The matches you need will be the number of keys in tMap: 3
+The matches you have will be the number of keys in sMap that are greater than or equal to the keys in tMap
+
+As you increment r pointer, add to that letter in sMap if it exists
+    - If the count of the letter in sMap is now equal to the count of the letter in tMap, you gained a match, increment matches
+
+As you increment l pointer, subtract that letter from sMap if it exists
+    - If the count of the letter in sMap is now 1 less than the letter in tMap, you lost a match, decrement matches
+
+Pseudocode:
+1. If s is smaller in length than t, return ""
+2. Instantiate a tMap at {}
+3. Instantiate an sMap at {}
+4. Iterate through t
+    1. Add each letter to tMap if it doesn't exist at 1, if it does exist increment by 1
+    2. Add each letter to sMap at 0 
+5. Iterate through t
+    1. Increment each letter at s to sMap if it exists
+6. Instantiate a matchesNeeded at Object.keys(tMap).length
+7. Instantiate a matches at 0
+8. Instantiate a minSubstringIndices var at [0, s.length - 1] (max window)
+8. Iterate through tMap keys
+    1. If the letter in tMap is >= the letter in sMap, increment matches by 1
+9. Instantiate a left pointer at 0
+10. Instantiate a right pointer at t.length - 1 (so the window starts at exactly the length of t)
+12. While r < s.length
+    1. While matches === matchesNeeded
+        1. This window is valid, so replace minSubstringIndices with the current l and r if the current l and r is less than the difference between minSubstringIndices[1] - minSubstringIndices[0]
+        // Check for smaller window by incrementing l
+        2. If the letter at l exists in the sMap
+            1. decrement the letter at l in sMap
+            2. if the letter at l in sMap is now 1 less than the letter at l in tMap, you've lost a match, so decrement matches
+        3. Increment l
+    2. At this point, matches will not = matchesNeeded, so increment r
+    3. If the letter at r exists in sMap
+        1. Add the new letter at r to the sMap
+        2. If the letter at r in sMap is now equal to the letter at r in tMap, you've gained a match, so increment matches
+13. Return s.slice(minSubstringIndices[0], minSubstringIndices[1] + 1) (exclusive on the right, so add 1 to include the letter at the right pointer)
+
+Time complexity: O(n) - Since I'm iterating through s once using a window to find the minimum window substring
+Space complexity: O(t) - Where t is the number of unique letters in the t string, since I'm using two hashmaps that only hold those unique letters to calculate matches and keep track of match changes through the window shift
+
+*/
+
+function minWindow(s: string, t: string): string {
+    if (s.length < t.length) return "";
+    const tMap = {};
+    const sMap = {};
+
+    for (const letter of t) {
+        tMap[letter] ? tMap[letter] += 1 : tMap[letter] = 1;
+        sMap[letter] = 0;
+    }
+
+    //tMap { 'A': 1, 'B': 1, 'C': 1 }
+    //sMap { 'A': 1, 'B': 1, 'C': 1 }
+    for (let i = 0; i < t.length; i += 1) {
+        if (sMap[s[i]] >= 0) sMap[s[i]] += 1;
+    }
+
+    const matchesNeeded = Object.keys(tMap).length; // 3
+    let matches = 0; // 3
+    let minSubstringIndices = [];
+
+    for (const letter of Object.keys(tMap)) { // ['A', 'B', 'C']
+        if (sMap[letter] >= tMap[letter]) matches += 1;
+    }
+
+    let l = 0;
+    let r = t.length - 1;
+
+    while (r < s.length) {
+        while (matches === matchesNeeded) {
+            if (!minSubstringIndices.length || (minSubstringIndices[1] - minSubstringIndices[0]) > (r - l)) minSubstringIndices = [l, r];
+            if (sMap[s[l]] !== undefined) sMap[s[l]] -= 1;
+            if (sMap[s[l]] === tMap[s[l]] - 1) matches -= 1;
+            l += 1;
+        }
+
+        r += 1;
+
+        if (sMap[s[r]] >= 0) {
+            sMap[s[r]] += 1;
+            if (sMap[s[r]] === tMap[s[r]]) matches += 1;
+        }
+    }
+
+    return minSubstringIndices.length === 0 ? "" : s.slice(minSubstringIndices[0], minSubstringIndices[1] + 1);
+};
