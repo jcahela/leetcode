@@ -321,3 +321,111 @@ function reorderList(head: ListNode | null): void {
         tail.next = l2;
     }
 };
+
+/*************** Attempt #3 - Remembered Floyd's Algorithm to find the middle, merged 2 at a time using 2 tmp vars correctly first try ******************/
+
+/*
+
+First I need to find the middle of the list
+
+Then, I need to split the list so that I have:
+    1. one list that goes from the beginning to the middle, and
+    2. another list that goes from the middle to the end
+
+Then, I need to reverse the second list
+
+Then, I need to merge the two lists by alternating between which ones I set to next
+
+Then, I return the head of the merged list
+               s                   f
+(1) -> (2) -> (3) -> null
+
+(4) -> (5) => (5) -> (4)
+
+dummy ->       (1)  (2)  head(3) -> tmp1 null
+                |  / |   /
+               (5)  tail(4)  prev(null)
+
+tmp1 = head.next;
+tmp2 = prev.next;
+tail.next = head
+head.next = prev
+
+head = tmp1
+prev = tmp2
+tail = tail.next.next
+
+Pseudocode:
+// Find the middle of the list and split them - Using Floyd's algorithm of a fast and slow pointer
+1. Instantiate a slow pointer at head
+2. Instantiate a fast pointer at head.next
+3. While fast and fast.next
+    1. Set slow to be slow.next
+    2. Set fast to be fast.next.next
+4. At this point, slow should be at the end of the first list, so instantiate a head2 var at slow.next
+5. Then, set slow.next to be null
+
+// Reverse the second list
+6. Instantiate a prev var at null
+7. While head2
+    1. Save head2.next in a tmp var
+    2. Set head2.next to be prev
+    3. Set prev to be head2
+    4. Set head2 to be tmp
+8. At this point, head and prev should be the heads of the lists to merge
+
+// Merge the first half list and the reversed second half list
+9. Instantiate a dummy node that points to head
+10. Instantiate a tail node that = dummy
+11. While head or prev are truthy
+    1. Instantiate a tmp1 var at head.next
+    2. Instantiate a tmp2 var at prev ? prev.next : null
+    3. Set tail.next to be head
+    4. Set head.next to be prev
+    5. Set head to be tmp1
+    6. Set prev to be tmp2
+    7. Set tail to be tail.next.next
+12. Return dummy.next
+
+Time complexity: O(n) - Since I'm traversing through half the list to find the mid pointer, half the list to reverse the second half, then through the whole list while merging the two halves, it simplifies to O(n)
+
+Space complexity: O(1) - Since I'm only using pointers
+
+*/
+
+function reorderList(head: ListNode | null): void {
+    // Find the middle of the list and split them - Using Floyd's algorithm of a fast and slow pointer
+    let slow = head;
+    let fast = head.next;
+    while (fast && fast.next) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    let head2 = slow.next;
+    slow.next = null;
+
+    // Reverse the second list
+    let prev = null;
+    while (head2) {
+        const tmp = head2.next;
+        head2.next = prev;
+        prev = head2;
+        head2 = tmp;
+    }
+
+    // Merge the first half list and the reversed second half list
+    let tail = new ListNode();
+
+    while (head || prev) {
+        const tmp1 = head.next;
+        const tmp2 = prev ? prev.next : null;
+
+        tail.next = head;
+        head.next = prev;
+
+        head = tmp1;
+        prev = tmp2;
+
+        tail = tail.next.next;
+    }
+};
