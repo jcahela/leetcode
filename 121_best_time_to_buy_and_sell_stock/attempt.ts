@@ -80,3 +80,48 @@ function maxProfit(prices: number[]): number {
 
   return profit;
 };
+
+/************** Attempt #3 easy *****************/
+
+/*
+
+Use a sliding window with buy as the left pointer and sell as the right
+
+If sell is greater than buy, I set buy to be that sell number
+
+Then, once sell is greater than buy, I calculate the profit I would make, and save it in the profit var if it's a larger profit than the current profit var
+
+Since you can only move forward, you can't buy at an index greater than the sell, you can only move forward in the window, so a sliding window would work
+
+Pseudocode:
+1. Instantiate a profit var at 0
+2. Instantiate a buy var at 0
+3. Instantiate a sell var at 1
+4. While sell is < prices.length
+    1. If the number at sell is smaller than or equal to the number at buy
+        1. Set buy to be sell
+    2. Else (number at sell is larger than number at buy)
+        1. Replace profit with the difference of sell and buy if the difference is larger than profit
+    3. Increment sell
+5. Return profit
+
+Time complexity: O(p) - Where p is length of prices array since we only need to iterate through it once
+Space complexity: O(1) - Since I'm only using pointers
+
+*/
+
+function maxProfit(prices: number[]): number {
+    let profit = 0;
+    let buy = 0;
+    let sell = 1;
+    while (sell < prices.length) {
+        if (prices[sell] <= prices[buy]) {
+            buy = sell;
+        } else {
+            profit = Math.max(profit, (prices[sell] - prices[buy]));
+        }
+        sell += 1;
+    }
+
+    return profit;
+};
