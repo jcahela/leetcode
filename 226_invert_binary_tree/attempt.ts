@@ -99,3 +99,42 @@ function invertTree(root: TreeNode | null): TreeNode | null {
 
   return root;
 };
+
+
+/*************** Attempt #3 success, using tmp var, easy *****************/
+
+/*
+
+Recursive DFS, post-order, as you're popping out of the recursive call stack
+    1. save left tree in a tmp var
+    2. set left tree to equal right tree
+    3. set right tree to equal tmp
+
+Pseudocode:
+// Base Case
+1. If root === null return root
+// Recursive case
+2. Recurse left: invertTree(root.left)
+3. Recurse right: invertTree(root.right)
+4. Instantiate a tmp var at root.left
+5. Set root.left = root.right
+6. Set root.right = tmp
+7. Return root
+
+Time complexity: O(n)
+Space complexity: O(h)
+
+*/
+
+function invertTree(root: TreeNode | null): TreeNode | null {
+  if (root === null) return root;
+
+  invertTree(root.left);
+  invertTree(root.right);
+
+  const tmp = root.left;
+  root.left = root.right;
+  root.right = tmp;
+
+  return root;
+};
