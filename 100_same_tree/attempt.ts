@@ -78,3 +78,51 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
 
   return true;
 };
+
+/****************** Attempt #2 - Traversing both trees at the same time, using base cases to determine if they're the same, and propogating those booleans up - Successful ********************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+What would the base case be? If the pNode does not equal the qNode
+    - if pNode is null and qNode is not null
+    - if pNode is not null and qNode is null
+    - if neither are null but don't equal each other
+
+Pseudocode:
+// Base case:
+1. If p === null && q !== null, return false
+2. If p !== null && q === null, return false
+3. If p.val !== q.val, return false
+
+// Recursive case
+4. Instantiate a leftIsSame var at isSameTree(p.left, q.left)
+5. Instantiate a rightIsSame var at isSameTree(p.right, q.right)
+6. Return leftIsSame && rightIsSame (so if either of them are false, it returns false up, propogating up the tree until the overall function returns false)
+
+Time complexity: O(n) - Recursive dfs
+Space complexity: O(h) - Recursive dfs
+
+ */
+
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (p === null && q === null) return true;
+    if (p === null && q !== null) return false;
+    if (p !== null && q === null) return false;
+    if (p.val !== q.val) return false;
+
+    const leftIsSame = isSameTree(p.left, q.left);
+    const rightIsSame = isSameTree(p.right, q.right);
+
+    return leftIsSame && rightIsSame;
+};
