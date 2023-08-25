@@ -135,3 +135,69 @@ function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
 
     return dummy.next;
 };
+
+/********************** Attempt #3 - Calculate length of list and use the diff, try neetcode solution next time *****************************/
+
+/*
+
+First, count the nodes in the list
+
+
+n = 2
+
+ dummy()
+              (1) -> (2) -> left(3) -> (4) -> (5) -> right(null)
+
+listLength = 5
+
+Then, subtract by n: 5 - 2 = 3 - 1 = 2 (land 1 node before the node to remove)
+
+               c
+(1) -> (2) -> (3) -> (4) -> (5)
+
+Set c.next = c.next.next
+
+If n = 1
+length = 5 - 1 - 1 = 0
+                      c
+(1) -> (2) -> (3) -> (4) -> (5)
+
+Pseudocode:
+1. Instantiate a length var at 0
+2. Instantiate a curr var at head
+3. While curr
+    1. Add 1 to length
+    2. Set curr = curr.next
+4. Set numFromEnd var to be length - n - 1
+5. Set curr to be head again
+6. While numFromEnd > 0
+    1. Subtract 1 from numFromEnd
+    2. Increment curr
+7. Set curr.next = curr.next.next
+8. Return head
+
+*/
+
+function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
+    let length = 0;
+    let curr = head;
+    while (curr) {
+        length += 1;
+        curr = curr.next
+    }
+
+    let numFromEnd = length - n - 1;
+
+    if (numFromEnd === -1) return head.next;
+
+    curr = head;
+
+    while (numFromEnd > 0) {
+        numFromEnd -= 1;
+        curr = curr.next;
+    }
+
+    curr.next = curr.next.next;
+
+    return head;
+};
