@@ -128,3 +128,46 @@ function findDuplicate(nums: number[]): number {
         fast = nums[fast];
     }
 };
+
+
+/******************** Attempt #3 - fast, using floyd's algorithm ***********************/
+
+/*
+
+floyd's algorithm to find where slow and fast meet in the cycle,
+then resetting slow to 0 and incrementing both by 1 until they meet to find the beginning of the cycle, which is the duplicate
+
+1. Slow pointer at 0
+2. Fast pointer at 0
+3. while true
+    1. slow = nums[slow]
+    2. fast = nums[fast][fast]
+    3. if slow === fast, break
+4. Slow = 0
+5. while true
+    1. slow = nums[slow]
+    2. fast = nums[fast]
+    3. if slow === fast return slow
+
+Time complexity: O(n)
+Space complexity: O(1) 
+
+*/
+
+function findDuplicate(nums: number[]): number {
+    let slow = 0;
+    let fast = 0;
+    while (true) {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        if (slow === fast) break;
+    }
+
+    slow = 0;
+
+    while (true) {
+        slow = nums[slow];
+        fast = nums[fast];
+        if (slow === fast) return slow;
+    }
+};
