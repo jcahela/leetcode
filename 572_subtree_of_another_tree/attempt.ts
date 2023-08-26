@@ -89,3 +89,81 @@ function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
 
   return hasSubtree;
 };
+
+/***************** Attempt #2 - easy, good, dfs recursion and checking each node for a value that === subRoot.val *******************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+traverse the tree, and look for the subRoot value
+
+Once you find a node that's subroot, check for equivalency
+
+If that equivalency is true, set an external var to true
+If that equivalency is false, continue traversing the original tree
+
+Pseudocode:
+1. Instantiate a subtree var at false
+2. Instantiate a dfs function that takes in a node
+    // Base case
+    1. If node is null or subtree is true, return (if at any point you find a subtree, start immediately recursing up the tree)
+    // Recursive case
+    2. Recurse left: dfs(node.left)
+    3. Recurse right: dfs(node.right)
+    4. If current node.val === subRoot.val
+        1. Instantiate a var equivalent that will be isSame(node, subRoot)
+        2. If equivalent, set subtree var to true
+3. Instantiate a isSame function that takes in two nodes
+    // Base case
+    1. If node1 is null and node2 is null, return true
+    2. If !node1 or !node2 or node1.val !== node2.val, return false
+    // Recursive case
+    3. Instantiate a leftIsSame var at isSame(node1.left, node2.left)
+    4. Instantiate a rightIsSame var at isSame(node1.right, node2.right)
+    5. Return leftIsSame && rightIsSame so the truthiness propogates up whenever a false case is found
+4. Instantiate dfs function with root parameter
+5. Return subtree var
+
+Time complexity: O(n) - Where n is the nodes in root tree, worst case the root is all nodes that are the same value as the subRoot root value, and isSame is called on each node, but each subtree is eventually found to not be equivalent. In that case, the worst case time complexity is a coefficient of n, but not an order of magnitude of n since as soon as equivalency is not found, you start recursing up the call stack in the isSame function, so it wouldn't be truly O(n * m), where m is the nodes in the subRoot tree
+
+Space complexity: O(h) - Worst case there's a subtree you have to check in root, but you never go deeper than the height of root, since you stop checking for equivalency once you reach null or you find non-matching nodes, so it's O(h) where h is the height of the root tree
+
+ */
+
+function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
+    let subtree = false;
+    function dfs(node) {
+        if (node === null || subtree) return;
+        dfs(node.left);
+        dfs(node.right);
+
+        if (node.val === subRoot.val) {
+            const equivalent = isSame(node, subRoot);
+            if (equivalent) subtree = true;
+        }
+    }
+
+    function isSame(p, q) {
+        if (p === null && q === null) return true;
+        if (!p || !q || p.val !== q.val) return false;
+
+        const leftIsSame = isSame(p.left, q.left);
+        const rightIsSame = isSame(p.right, q.right);
+
+        return leftIsSame && rightIsSame;
+    }
+
+    dfs(root);
+
+    return subtree;
+};
