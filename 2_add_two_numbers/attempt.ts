@@ -255,3 +255,36 @@ function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | nul
 
     return nodeArray[0];
 };
+
+/********************** Attempt #3 good easy, double traversal, use carry, continue until no more numbers to add with l1, l2, and carry ************************/
+
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+ */
+
+function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+    let carry = 0;
+    const dummy = new ListNode();
+    let tail = dummy;
+
+    while (l1 || l2 || carry) {
+        const addend1 = l1 ? l1.val : 0;
+        const addend2 = l2 ? l2.val : 0;
+        const sum = (addend1 + addend2 + carry) % 10;
+        carry = Math.floor((addend1 + addend2 + carry) / 10);
+        tail.next = new ListNode(sum);
+        tail = tail.next;
+        l1 = l1 ? l1.next : null;
+        l2 = l2 ? l2.next: null;
+    }
+
+    return dummy.next;
+};
