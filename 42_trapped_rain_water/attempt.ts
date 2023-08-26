@@ -86,3 +86,68 @@ function trap(height: number[]): number {
 
     return trappedWater;
 };
+
+/*************************** Attempt #2 - success using two arrays *********************************/
+
+/*
+
+Each height takes up water based on the smaller of the two max borders around it
+
+1st height of 0 takes no water, since it spills over to the side (left of this has no heights)
+
+2nd height of 1 takes no water, since the smaller surrounding border is 0 (spills over to the left)
+
+3rd height of 0 takes 1 water, since the smaller surrounding border is 1 (the left border)
+
+4th height of 2 takes no water, since the smaller surrounding border is 1 (left border)
+
+5th height of 1 takes 1 water, since the smaller surrounding border is 2
+
+6th height of 0 takes 2 water, since the smaller surrounding border is 2
+
+So first I need to check what the max left border is
+
+Then I need to find what the max right border is
+
+Then use the smaller of the two at each index to calculate how much water would be held at a specific height at that index
+
+ 0 1 1 2 2 2 2 3 2 2 2 1
+[0,1,0,2,1,0,1,3,2,1,2,1]
+
+Pseudocode:
+1. Instantiate a minBorder array at [];
+2. Iterate through height array
+    1. If the minBorder array is empty, push the current height to it
+    2. Push the max between the current height and the top height in minBorder
+3. Iterate through the height array backwards
+    1. Set the minBorder at the current index to the minimum between the current height and the height in the minBorder at that index
+4. Instantiate an output arr at 0
+5. Iterate over height array
+    1. Add to output the minBorder at that index - height at that index
+6. Return height
+
+Time complexity: O(n) - Since I only iterate over heights 3 times, which simplifies to n
+Space complexity: O(n) - Since I store n amount of items in the minBorder array
+
+*/
+
+function trap(height: number[]): number {
+    const maxLeftBorder = Array.from({ length: height.length }, () => 0);
+    const maxRightBorder = Array.from({ length: height.length }, () => 0);
+    let l = 0;
+    let r = height.length - 1;
+    while (l < height.length) {
+        maxLeftBorder[l] = !maxLeftBorder[l - 1] ? height[l] : Math.max(height[l], maxLeftBorder[l - 1]);
+        maxRightBorder[r] = !maxRightBorder[r + 1] ? height[r] : Math.max(height[r], maxRightBorder[r + 1])
+        l += 1;
+        r -= 1;
+    }
+
+    let output = 0;
+
+    for (let i = 0; i < height.length; i += 1) {
+        output += Math.min(maxLeftBorder[i], maxRightBorder[i]) - height[i];
+    }
+
+    return output;
+};
