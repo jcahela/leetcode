@@ -48,3 +48,34 @@ function rightSideView(root: TreeNode | null): number[] {
 
   return output;
 };
+
+/******************** Attempt #2 - easy, BFS with queue *************************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function rightSideView(root: TreeNode | null): number[] {
+    if (!root) return [];
+    const output = [];
+    const queue: [TreeNode, number][] = [[root, 1]];
+
+    while (queue.length) {
+        const [node, level] = queue.shift();
+        if (!queue.length || queue[0][1] === level + 1) output.push(node.val);
+        if (node.left) queue.push([node.left, level + 1]);
+        if (node.right) queue.push([node.right, level + 1]);
+    }
+
+    return output;
+};
