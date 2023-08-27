@@ -117,3 +117,76 @@ function findMin(nums: number[]): number {
         }
     }
 };
+
+/************************** Attempt #3 - took a while, but remembered neetcode solution *********************************/
+
+/*
+
+To run in O(log n) time I need to implement binary search
+
+So when I start the search, I need to determine if I need to go left or right when making the next search to find the minimum
+
+If I look at the left portion and it's sorted, what does that mean?
+
+min = 0
+
+ l           
+   m   
+     r
+ 0 1 2 3 4 5 6
+[5,6,7,0,1,2,4]
+
+ l           
+ m   
+ r
+ 0 1 2 3 4 5 6
+[7,0,1,2,4,5,6]
+
+  l           
+        m   
+           r
+  0  1  2  3
+[11,13,15,17]
+
+If left is less than right, then the entire portion I'm on is sorted, so the left pointer is the minimum. Replace an external min variable if the current left pointer number is less than it, then go right
+
+If left array is sorted,
+    either the minimum is the left pointer, or the minimum is in the right unsorted portion. Replace an external min variable if the current left pointer number is less than it, then go right
+
+If the right array is sorted,
+    either the minimum is the mid pointer, or the minimum is in the left unsorted portion. Replace an external min variable if the current mid pointer number is less than it, then go left
+
+Pseudocode:
+1. Instantiate a min var at undefined
+2. Instantiate a left pointer at 0
+3. Instantiate a right pointer at nums.length - 1
+4. while left is <= right
+    1. Instantiate a min var at Math.ceil((left + right) / 2)
+    2. If num at left is <= num at mid, left array is sorted
+        1. set min to be: min = min ? Math.min(nums[l], min) : nums[l]
+        2. l = m + 1
+    3. Else
+        1. set min to be: min ? Math.min(nums[m], min) : nums[m]
+        2. r = m - 1
+5. Return min var
+
+*/
+
+function findMin(nums: number[]): number {
+    let min;
+    let l = 0;
+    let r = nums.length - 1;
+
+    while (l <= r) {
+        const m = Math.ceil((l + r) / 2);
+
+        if (nums[l] <= nums[m]) {
+            min = min !== undefined ? Math.min(nums[l], min) : nums[l];
+            l = m + 1;
+        } else {
+            min = min !== undefined ? Math.min(nums[m], min) : nums[m];
+            r = m - 1;
+        }
+    }
+    return min;
+};
