@@ -68,3 +68,71 @@ function goodNodes(root: TreeNode | null): number {
 
   return output;
 };
+
+/*************** Attempt #2 - Success, easy *******************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+In order to know if a node is "good", you need to know what the max value is at the time you traverse to the node. To do this, you can carry through a max variable that starts at the root as the max, then as you traverse down, if the current node is larger, set that node as the new max.
+
+Each time you get to a node that's smaller than the max it receives, add 1 to an external variable
+
+Pseudocode:
+1. Instantiate a good var at 0;
+2. Instantiate a dfs function that takes in a node and a max var
+    // Base case
+    1. if node is null, return
+    // Recursive case
+    2. if the current node is less than or equal to max, add 1 to good var
+    3. call dfs on node.left, and set max to the min between the current node val and the max val of the current recursion
+    4. call dfs on node.right, and set max to the min between teh current node val and the max val of the current recursion
+    No need to return anything since we're just traversing and counting good nodes
+3. Call the dfs function with root and root.val as the max
+4. Return good
+
+Time complexity: O(n) - Where n is the number of nodes in root, since we have to traverse it
+Space complexity: O(h) - Since we use dfs which requires node height amount of space
+
+ */
+
+function goodNodes(root: TreeNode | null): number {
+    let good = 0;
+    function dfs(node: TreeNode | null, max: number) {
+        if (node === null) return;
+        if (node.val >= max) good += 1;
+        dfs(node.left, Math.max(node.val, max));
+        dfs(node.right, Math.max(node.val, max));
+    }
+    dfs(root, root.val);
+    return good;
+};
+
+/*
+
+[2,null,4,10,8,null,null,4]
+
+    (3) 3
+    /  \
+   3(1) (4)3
+   /   /   \
+ 3(3) (1)4  (5)4
+
+    (2)2
+      \
+      (4)2
+      /  \
+    4(10) (8)4
+           \
+           (4)8
+*/
