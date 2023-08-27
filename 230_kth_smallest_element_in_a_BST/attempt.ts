@@ -72,3 +72,60 @@ function kthSmallest(root: TreeNode | null, k: number): number {
 
     return numbers[k - 1];
 };
+
+/********************** Attempt #2 - less space used, short circuit so more efficient time on inputs that find kth smallest before the end of the traversal **************************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+I could use post-order dfs to make sure I land on the smallest element first, and count down k each traversal
+
+If I am on a node where k is 1, that means I'm on the 1st kth smallest element (1-indexed), so return that node's value
+
+Pseudocode:
+1. Instantiate a kthSmallestNode, set at root.val at first
+2. Define a dfs function that takes in node
+    // Base case
+    1. If node is null or k === 0, return
+    // Recursive case
+    2. recurse left
+    // In-order dfs traversal
+    3. At this point, you should start on the smallest node in the bst, so check if k = 1, set kthSmallestNode to current node's val
+    4. Subtract 1 from k
+    5. recurse right
+3. Call dfs on root
+4. Return kthSmallestNode
+
+Time complexity: O(n)
+Space complexity: O(h)
+
+ */
+
+function kthSmallest(root: TreeNode | null, k: number): number {
+  let kthSmallestNode = root.val;
+  function dfs(node: TreeNode | null) {
+      // Base case
+      if (node === null || k === 0) return;
+      // Recursive case
+      dfs(node.left);
+
+      if (k === 1) kthSmallestNode = node.val;
+      k -= 1;
+
+      dfs(node.right);
+
+  }
+
+  dfs(root);
+  return kthSmallestNode;
+};
