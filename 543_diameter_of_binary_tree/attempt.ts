@@ -45,3 +45,45 @@ function diameterOfBinaryTree(root: TreeNode | null): number {
 
   return max;
 };
+
+/******************** Diameter of binary tree using maxDepth of left and right subtrees and calculating current depth with external max var ************************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+If I traverse the binary tree and calculate the diamater of the current subtree, I can set an external variable to it if it's greater than the current external variable value
+
+To calculate the diamater of the current subtree, I will need the height of the maxHeight of the left and the maxHeight of the right and add 2
+
+ */
+
+function diameterOfBinaryTree(root: TreeNode | null): number {
+  let max = 0;
+
+  function dfs(node) {
+      if (node === null) return -1;
+
+      const leftDepth = dfs(node.left);
+      const rightDepth = dfs(node.right);
+
+      const currentDepth = leftDepth + rightDepth + 2;
+
+      max = Math.max(max, currentDepth);
+
+      return Math.max(leftDepth, rightDepth) + 1;
+  }
+
+  dfs(root);
+
+  return max;
+};
