@@ -146,3 +146,38 @@ function isBalanced(root: TreeNode | null): boolean {
     dfs(root);
     return balanced;
 };
+
+/********************* Attempt #3 - easy dfs w/short-circuit on base case **********************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function isBalanced(root: TreeNode | null): boolean {
+    let balanced = true;
+
+    function dfs(node) {
+        if (node === null || !balanced) return 0;
+
+        const leftDepth = dfs(node.left);
+        const rightDepth = dfs(node.right);
+
+        if (Math.abs(leftDepth - rightDepth) > 1) balanced = false;
+
+        return Math.max(leftDepth, rightDepth) + 1;
+    }
+
+    dfs(root);
+
+    return balanced;
+};
