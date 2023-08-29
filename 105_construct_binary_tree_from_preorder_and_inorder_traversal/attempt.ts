@@ -62,14 +62,63 @@ from 0 to 1
 
  */
 
-    function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
-        if (!preorder.length || !inorder.length) return null;
-    
-        const root = new TreeNode(preorder[0]);
-        const mid = inorder.indexOf(preorder[0]);
-    
-        root.left = buildTree(preorder.slice(1, mid + 1), inorder.slice(0, mid));
-        root.right = buildTree(preorder.slice(mid + 1, preorder.length), inorder.slice(mid + 1, inorder.length));
-    
-        return root;
-    };
+function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
+    if (!preorder.length || !inorder.length) return null;
+
+    const root = new TreeNode(preorder[0]);
+    const mid = inorder.indexOf(preorder[0]);
+
+    root.left = buildTree(preorder.slice(1, mid + 1), inorder.slice(0, mid));
+    root.right = buildTree(preorder.slice(mid + 1, preorder.length), inorder.slice(mid + 1, inorder.length));
+
+    return root;
+};
+
+
+/************************ Attempt #3 - knew approach, understood how to pass preorder and inorder arrays through the dfs traversal so it constructs the tree correctly ************************** */
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+
+Since the first number in preorder is always the root of the current tree/subtree, I can use that to create the node I'm currently going to define and attach any subtrees to
+
+Then, I can create the left subtree and right subtree
+
+The left subtree will contain the rest of preorder as preorder (after the root), and the right subtree will have from 0 to the current node's index as inorder, not including the current node in the inorder
+
+The right subtree will contain the rest of preorder as preorder (after the root's index in inorder + 1, so that you don't give it any leftsubtree nodes, up to the end of preorder), and the nodes after the index of the current node in inorder as inorder
+
+node.left = buildTree(preorder.slice(1, preorder.length), inorder.slice(0, inorder.indexOf(preorder[0])));
+node.right = buildTree(preorder.slice(inorder.indexOf(preorder[0]) + 1, preorder.length), inorder.slice(inorder.indexOf(preorder[0]) + 1), inorder.length), 
+
+Base case: if (!inorder.length || !preorder.length) return null
+
+Recursive case: return current node, it will be defined as the thing its parent node will point to in the above recursive steps
+
+
+
+ */
+
+function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
+    if (!inorder.length || !preorder.length) return null; // don't even need !preorder since inorder will run out at each leaf node first
+
+    const node = new TreeNode(preorder[0]);
+    const rootIndex = inorder.indexOf(preorder[0]);
+
+    node.left = buildTree(preorder.slice(1, preorder.length), inorder.slice(0, rootIndex));
+    node.right = buildTree(preorder.slice(rootIndex + 1, preorder.length), inorder.slice(rootIndex + 1, inorder.length));
+
+    return node;
+};
