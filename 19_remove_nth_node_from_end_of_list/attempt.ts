@@ -201,3 +201,61 @@ function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
 
     return head;
 };
+
+/************** Attempt #4 - Done with a single traversal *****************/
+
+/*
+
+If I create a dummy node that points to head
+
+I could then make a right pointer that starts at the dummy node and increment it for as long as n is
+
+so if n is 1, the right pointer will stop at the head node
+if n is 2, the right pointer will stop at head.next node
+
+Then, I could make a left pointer that starts at the dummy node, and increment both until right.next is null (r ends at the last node in the list, and l ends at the node before the node to be skipped)
+
+                         l            r
+dummy -> (1) -> (2) -> (3) -> (4) -> (5)
+
+Then, I could set l to point at l.next.next
+
+Then return dummy.next
+
+Pseudocode:
+1. Instantiate a dummy node at new ListNode(0, head)
+2. Instantiate a right pointer at dummy
+3. Instantiate a left pointer at dummy
+4. While n > 0
+    1. Set right pointer to be right.next
+    2. set n -= 1
+5. While r.next
+    1. set left pointer to be left.next
+    2. set right pointer to be right.next
+6. Set l to point to its next.next
+7. Return dummy.next
+
+Time complexity: O(n) - Since we only traverse through the list once then skip the required node
+Space complexity: O(1) - Since we only use pointers
+
+*/
+
+function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
+    const dummy = new ListNode(0, head);
+    let r = dummy;
+    let l = dummy;
+
+    while (n > 0) {
+        r = r.next;
+        n -= 1;
+    }
+
+    while (r.next) {
+        l = l.next;
+        r = r.next;
+    }
+
+    l.next = l.next.next;
+
+    return dummy.next;
+};
