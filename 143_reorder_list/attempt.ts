@@ -429,3 +429,88 @@ function reorderList(head: ListNode | null): void {
         tail = tail.next.next;
     }
 };
+
+/************************ Attempt #4 - easy, good first attempt, using floyd's algorithm and multiple tmp vars *****************************/
+
+/*
+
+In order to reorder, I need to split the list in half, reverse the second half, then merge them together
+ s      f
+        s             f
+(1) -> (2) -> (3) -> (4) -> null
+
+ s      f
+        s             f
+               s                    f
+(1) -> (2) -> (3) -> (4) -> (5) -> null
+
+Pseudocode:
+// Find the middle and split the list in half from the middle - Floyd's Algorithm
+1. Instantiate a slow pointer at head
+2. Instantiate a fast pointer at head.next
+3. while fast and fast.next
+    1. increment slow pointer by 1
+    2. increment fast pointer by 2
+4. Instantiate an l2 var at slow.next
+5. Set slow.next to be null
+
+// Reverse the second half
+6. Instantiate a prev var at null
+7. while l2 is truthy
+    1. store l2.next in a tmp var
+    2. Set l2.next to be prev
+    3. Set prev to be l2
+    4. Set l2 to be tmp var
+
+        head
+(1) (2) (3) -> null
+  |/ | /    l2
+(4) (5) -> null
+
+// Merge the first half and the reversed second half
+8. While head AND l2 is truthy (the first half will either be the same length as the second, or have 1 more node than the second. Either way, once the shorter list head is pointing at null, you've already merged the two lists, and the longer list head will point at its tail node)
+    1. set tmp1 var to head.next, else set it to null
+    2. set tmp2 var to l2.next, else set it to null
+    3. set head.next to be l2
+    4. Set l2.next to be tmp1
+    6. head = tmp1
+    7. l2 = tmp2
+
+*/
+
+function reorderList(head: ListNode | null): void {
+    // Find the middle and split the list in half from the middle - Floyd's Algorithm
+    let slow = head;
+    let fast = head.next;
+
+    while (fast && fast.next) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+
+    let l2 = slow.next;
+
+    slow.next = null;
+
+    // Reverse the second half
+    let prev = null;
+
+    while (l2) {
+        const tmp = l2.next;
+        l2.next = prev;
+        prev = l2;
+        l2 = tmp;
+    }
+
+    // Merge the first half and the reversed second half
+    while (head && prev) {
+        const tmp1 = head.next;
+        const tmp2 = prev.next;
+
+        head.next = prev;
+        prev.next = tmp1;
+        
+        head = tmp1;
+        prev = tmp2;
+    }
+};
