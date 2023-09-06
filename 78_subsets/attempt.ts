@@ -91,3 +91,35 @@ function subsets(nums: number[]): number[][] {
 
     return output;
 };
+
+/*********** Attempt #3 - success - correct decision tree and backtrack method ************/
+
+/*
+
+                           []
+                [1]                 []
+         [1,2]        [1]       [2]     []
+    [1,2,3] [1,2] [1,3] [1] [2,3] [2] [3] []
+
+*/
+
+function subsets(nums: number[]): number[][] {
+    const output = [];
+
+    function backtrack(curr, i) {
+        if (i >= nums.length) {
+            output.push([...curr]);
+            return;
+        }
+
+        curr.push(nums[i]);
+        backtrack(curr, i + 1);
+
+        curr.pop();
+        backtrack(curr, i + 1);
+    }
+
+    backtrack([], 0);
+
+    return output;
+};
