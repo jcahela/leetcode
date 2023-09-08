@@ -164,3 +164,51 @@ while (queue.length) {
 
 return maxLevel;
 };
+
+/************ Attempt #3 **************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+I could use DFS traversal
+
+Once traversing out of the null nodes, I can return 0
+
+Then, each recursive case I would instantiate a leftDepth at maxDepth(root.left)
+
+and a rightDepth as maxDepth(root.right)
+
+Then, for the return, that's when I add 1 to the larger between left and right. By doing this, I ensure that each step from null back up the tree will add 1 to whichever subtree was larger, left or right, resulting in the max depth being passed up
+
+Pseudocode:
+// Base case
+1. If root is null, return 0
+
+// Recursive case
+2. Instantiate a leftDepth at maxDepth(root.left)
+3. Instantiate a rightDepth at maxDepth(root.right);
+4. Return Math.max(leftDepth, rightDepth) + 1;
+
+Time complexity: O(n) - where n is the number of nodes in the tree
+
+Space complexity: O(h) - since that's how much space I need to run dfs traversal while using O(1) space each recursive step
+ */
+
+function maxDepth(root: TreeNode | null): number {
+  if (root === null) return 0;
+
+  const leftDepth = maxDepth(root.left);
+  const rightDepth = maxDepth(root.right);
+
+  return Math.max(leftDepth, rightDepth) + 1;
+};
