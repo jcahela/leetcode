@@ -138,3 +138,18 @@ function invertTree(root: TreeNode | null): TreeNode | null {
 
   return root;
 };
+
+/************** Attempt #4 easy *****************/
+
+function invertTree(root: TreeNode | null): TreeNode | null {
+  if (root === null) return root;
+
+  const left = invertTree(root.left);
+  const right = invertTree(root.right);
+
+  const tmp = left;
+  root.left = right;
+  root.right = tmp;
+
+  return root;
+};
