@@ -365,3 +365,96 @@ function checkInclusion(s1: string, s2: string): boolean {
     }
     return matches === 26;
 };
+
+/********************* Attempt #4 - easy, alphabet count, using charCodeAt ************************/
+
+/*
+
+
+How would I know when a specific window is a permutation of s1?
+
+It must contain exactly the same characters and the same amounts
+
+I could use an alphabet count array and index a-z in indices 0,25
+
+Then, I could determine a permutation is when the window's alphabet count matches s1's alphabet count at all indices (26 matches)
+
+I don't need to expand or contract the window, because for the window to be a permutation of s1, it needs to be the same length as s1. A window that's 1 letter smaller or 1 letter larger wouldn't be a permutation
+
+Pseudocode:
+// Set the first window, and create alphabet counts for s1 and for that window
+0. If s1.length > s2.length, it's impossible for s2 to contain a permutation of s1, so return false
+1. Instantiate an l pointer at 0
+2. Instantiate an r pointer at s1.length - 1
+3. Instantiate an s1Counts array at 26 length with 0 at each index
+4. Instantiate an s2Counts array at 26 length with 0 at each index
+5. Iterate through s1 with a normal loop using i
+    1. Instantiate s1Index at 'a'.charCodeAt(0) - s1[i].charCodeAt(0)
+    2. Instantiate s2Index at 'a'.charCodeAt(0) - s2[i].charCodeAt(0)
+    3. Add 1 to the s1Counts array at s1Index
+    4. Add 1 to the s2Counts array at s2Index
+6. Instantiate a matches var at 0
+7. Iterate through s1Counts with a normal loop using i
+    1. If the value at index i in s1Counts is than same as the value at index i in s2Counts, add 1 to matches
+
+// Shift the window through s2 and check if the matches equal 26, if so the current window is a permutation, so return true
+8. While r < s2.length
+    1. If matches is 26, return true
+    2. Increment r
+    3. Instantiate an rIndex var at 'a'.charCodeAt(0) - s2[r].charCodeAt(0)
+    4. Add 1 to the s2Counts array at the index of rIndex
+    5. If the number in s2Counts at rIndex is now = to the number in s1Counts at rIndex, you've gained a match, so add 1 to matches
+    6. Instantiate an lIndex var at 'a'.charCodeAt(0) - s2[l].charCodeAt(0)
+    7. Subtract 1 from the s2Counts array at the index of lIndex
+    8. If the number in s2Counts at lIndex is now 1 less than the number in s1Counts at lIndex, you've lost a match, so subtract 1 from matches
+    9. Increment l
+
+// If you end the window shifts and haven't returned true, there wasn't a permutation
+9. Return matches === 26 (at this point if you didn't return true in the above loop, there was no permutation of s1 in s2), but matches may have been incremented to 26 matches at the last loop, so you need to check one more time if matches === 26
+
+Time complexity: O(n) - Since I traverse s2 once using a sliding window
+Space complexity: O(1) - Since I use 2 count arrays to determine matches, it's 52 in space, which simplifies to O(1), or constant space
+
+*/
+
+
+function checkInclusion(s1: string, s2: string): boolean {
+    if (s1.length > s2.length) return false;
+
+    let l = 0;
+    let r = s1.length - 1;
+
+    const s1Counts = Array.from({ length: 26 }, () => 0);
+    const s2Counts = Array.from({ length: 26 }, () => 0);
+
+    for (let i = 0; i < s1.length; i += 1) {
+        const s1Index = s1[i].charCodeAt(0) - 'a'.charCodeAt(0);
+        const s2Index = s2[i].charCodeAt(0) - 'a'.charCodeAt(0);
+        s1Counts[s1Index] += 1;
+        s2Counts[s2Index] += 1;
+    }
+
+    let matches = 0;
+
+    for (let i = 0; i < s1Counts.length; i += 1) {
+        if (s1Counts[i] === s2Counts[i]) matches += 1;
+    }
+
+    while (r < s2.length - 1) {
+        if (matches === 26) return true;
+
+        r += 1;
+        let rIndex = s2[r].charCodeAt(0) - 'a'.charCodeAt(0);
+        s2Counts[rIndex] += 1;
+        if (s2Counts[rIndex] === s1Counts[rIndex]) matches += 1;
+        if (s2Counts[rIndex] === s1Counts[rIndex] + 1) matches -= 1;
+
+        let lIndex = s2[l].charCodeAt(0) - 'a'.charCodeAt(0);
+        s2Counts[lIndex] -= 1;
+        if (s2Counts[lIndex] === s1Counts[lIndex] - 1) matches -= 1;
+        if (s2Counts[lIndex] === s1Counts[lIndex]) matches += 1;
+        l += 1;
+    }
+
+    return matches === 26;
+};
