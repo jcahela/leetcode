@@ -145,3 +145,58 @@ function search(nums: number[], target: number): number {
 
     return -1;
 };
+
+/******************* Attempt #3 - easy, logical, <10 mins ********************/
+
+/*
+
+In a rotated sorted array of unique numbers, the target will be within the sortedness
+
+To run in O(log n) I have to do binary search. During the binary search, if the number at the left pointer is less than the number at the mid, I know that all numbers from left to mid are sorted/in order. Then I could check, is the target within the range of left to mid? Then go left. If the target is less than left or more than mid, then it's on the right, so go right.
+
+Pseudocode:
+1. Instantiate a l pointer at 0
+2. Instantiate a r pointer at nums.length - 1
+3. While left is less than or equal to right
+    1. Instantiate a mid pointer at Math.ceil((l + r) / 2)
+    2. Check if the number at mid is the target, if so return mid
+    3. If the number at left is less than or equal to the number at mid
+        1. This means the left array is sorted, so check: if the target is less than left or greater than mid
+            1. Go right
+        2. Else (target is greater than or equal to left OR smaller than or equal to mid, in either case), go left
+    4. Else (the number at left is greater than the number at mid)
+        1. This means the right array is sorted, so check: if the target is less than mid or greater than right
+            1. Go left
+        2. Else (target is greater than or equal to mid, or less than or equal to right, either way), go right
+4. Return -1 (by this point if you've escaped the while loop, the target wasn't in there)
+
+Time complexity: O(log n) - Since I'm using binary search
+Space complexity: O(1) - Since I'm only using pointers
+
+*/
+
+function search(nums: number[], target: number): number {
+    let l = 0;
+    let r = nums.length - 1;
+
+    while (l <= r) {
+        const m = Math.ceil((l + r) / 2);
+        if (nums[m] === target) return m;
+
+        if (nums[l] <= nums[m]) {
+            if (target < nums[l] || target > nums[m]) {
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        } else {
+            if (target < nums[m] || target > nums[r]) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+    }
+
+    return -1;
+};
