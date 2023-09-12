@@ -126,3 +126,45 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
 
     return leftIsSame && rightIsSame;
 };
+
+/*************************** Attempt #3 - easy no need for external vars *******************************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+
+start at the root of both trees
+
+check if the value is the same
+    if they both have values, both values must be the same
+    if they both don't have values, they're both the same
+    if one has value and the other doesn't, they're not the same
+
+Then traverse the tree and keep checking
+
+If you find a mismatched node, change an outside var to false, then return that outside var which defaults at true
+
+Time complexity: O(n)
+Space complexity: O(h)
+
+ */
+
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (!p && !q) return true;
+    if (!p || !q || p.val !== q.val) return false;
+
+    const leftIsSame = isSameTree(p.left, q.left);
+    const rightIsSame = isSameTree(p.right, q.right);
+
+    return leftIsSame && rightIsSame;
+};

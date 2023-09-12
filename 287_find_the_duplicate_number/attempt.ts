@@ -171,3 +171,62 @@ function findDuplicate(nums: number[]): number {
         if (slow === fast) return slow;
     }
 };
+
+/***************** Attempt #4 - easy, fast *******************/
+/*
+
+Since each integer is in the range [1,n] inclusive, I could treat this as a linked list problem, where each node is the index, and each value is the pointer to the next node (index)
+
+For the example:
+
+ 0 1 2 3 4
+[1,3,4,2,2]
+
+It would be equivalent to the following linked list
+
+                      sf
+(0) -> (1) -> (3) -> (2) -> (4)
+                      ^      |
+                      |      |
+                       -------
+
+To find the duplicate number, 2, I'd need to find where the linked list has a cycle, and find where that cycle starts. When two nodes point to the same node and create a cycle, the start of that cycle would be the duplicate (2 nodes have the same pointer, which means that's the duplicate)
+
+So, I'd have to have a slow and fast pointer, using Floyd's Algorithm, then keep incrementing them until they point at the same node
+
+Once they point at the same node, I reset slow, then increment both pointers by 1 until they again point at the same node. That'll be the start of the cycle, and the pointers would be at the duplicate number
+
+Pseudocode:
+1. Instantiate a slow pointer at 0
+2. Instantiate a fast pointer at 0
+3. While true
+    1. Set slow to be nums[slow] (sets it to 1)
+    2. Set fast to be nums[nums[fast]] (sets it to 3)
+    3. Check if slow === fast: break from the loop
+4. Set slow back to 0
+5. While true (since there'll always be only one repeated number)
+    1. Set slow to be nums[slow]
+    2. Set fast to be nums[fast]
+    3. If slow === fast, return slow (or fast, whichever, they'll both be the duplicate number)
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+*/
+
+function findDuplicate(nums: number[]): number {
+    let slow = 0;
+    let fast = 0;
+    while (true) {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        if (slow === fast) break;
+    }
+
+    slow = 0;
+    while (true) {
+        slow = nums[slow];
+        fast = nums[fast];
+        if (slow === fast) return slow;
+    }
+};

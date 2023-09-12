@@ -154,3 +154,62 @@ function levelOrder(root: TreeNode | null): number[][] {
 
   return output;
 };
+
+/******************** Attempt #3 ***********************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+For level order traversal, I can use a queue data structure, then when I get to the end of the current level, push the subarray to the output, and clear out the subarray for the next level
+
+How to know when I'm at the end of the current level? In a queue data structure, it'll be when the current node is a level 1 lower than the first node in the queue (the current node is the last in its level)
+
+Pseudocode:
+0. Check if root is null, if so return []
+1. Instantiate a queue array that takes in a tuple: [Node, number][]. Set it to have root and 1 as its node/level in indices 0 and 1
+2. Instantiate an output array that starts at empty
+2. Instantiate a currentLevel array that starts at empty
+3. While the queue is non-empty
+    1. Shift the first tuple from the array and destructure the values as current node and level
+    2. Push the node value onto the currentLevel array
+    3. Check if either: the queue is empty or the first node in the queue has a level 1 more than the current level (that means you've reached the end of the current level)
+        1. If so, push the currentLevel array onto the output array
+        2. Then, set currentLevel array to []
+    4. Finally, if the current node has a left child, push it to the queue with its level being level + 1
+    5. Also, if the current node has a right child, push it to the queue with its level being level + 1
+4. Return the output array
+
+Time complexity: O(n)
+Space complexity: O(w)
+
+ */
+
+function levelOrder(root: TreeNode | null): number[][] {
+  if (!root) return [];
+  const queue: [TreeNode, number][] = [[root, 1]];
+  const output = [];
+  let currentLevel = [];
+
+  while (queue.length) {
+      const [node, level] = queue.shift();
+      currentLevel.push(node.val);
+      if (!queue.length || queue[0][1] === level + 1) {
+          output.push(currentLevel);
+          currentLevel = [];
+      }
+      if (node.left) queue.push([node.left, level + 1]);
+      if (node.right) queue.push([node.right, level + 1]);
+  }
+
+  return output;
+};

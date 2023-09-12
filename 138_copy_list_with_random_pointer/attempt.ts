@@ -149,3 +149,71 @@ var copyRandomList = function(head) {
 
     return nodeMap.get(head);
 };
+
+
+/******************** Attempt #4 - easy, understand concept ********************/
+
+/**
+ * Definition for Node.
+ * class Node {
+ *     val: number
+ *     next: Node | null
+ *     random: Node | null
+ *     constructor(val?: number, next?: Node, random?: Node) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *         this.random = (random===undefined ? null : random)
+ *     }
+ * }
+
+{
+    originalNodehead: copyNodeHead,
+    originalNodehead+1: copyNodeHead+1
+}
+
+if originalNodeHead points its next at originalNodeHead+3, I could set its value to point to the value of originalNodeHead+3, causing the copies to point at the correct nodes
+
+Pseudocode:
+// First, create a map that has a key/value of null at the start
+1. Instantiate a map: const nodeMap = new Map()
+2. Set a key of null with value of null: nodeMap.set(null, null)
+
+// Then traverse through the list, setting the copy nodes as values to their original counterparts as keys
+3. Instantiate a curr var at head
+4. While curr is truthy
+    1. Set the current node as the key, and a copy of it as the value, into the map: nodeMap.set(curr, new Node(curr.val))
+    2. Increment curr (curr = curr.next)
+
+// Then, traverse through the list again, setting the pointers for each node using the originals to key into their own copies
+5. Set curr back to head
+6. While curr is truthy
+    1. Set the value at the current node in nodeMap (its copy) to have its next pointer point to the value at the current node's next node in nodeMap (the copy of the current node's next node)
+    2. Set the value at the current node in nodeMap (its copy) to have its random pointer point to the value at the current node's random node in nodeMap (the copy of the current node's random node)
+
+// Finally, return the value of head in the map, which should be the copy list head
+7. Return nodeMap at head
+
+Time complexity: O(n)
+Space complexity: O(n)
+
+ */
+
+function copyRandomList(head: Node | null): Node | null {
+    const nodeMap = new Map();
+    nodeMap.set(null, null);
+
+    let curr: Node = head;
+    while (curr) {
+        nodeMap.set(curr, new Node(curr.val));
+        curr = curr.next;
+    }
+
+    curr = head;
+    while (curr) {
+        nodeMap.get(curr).next = nodeMap.get(curr.next);
+        nodeMap.get(curr).random = nodeMap.get(curr.random);
+        curr = curr.next;
+    }
+
+    return nodeMap.get(head);
+};
