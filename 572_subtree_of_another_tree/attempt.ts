@@ -167,3 +167,49 @@ function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
 
     return subtree;
 };
+
+/******************* Attempt #3 ******************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
+    let isSub = false;
+
+    function checkSame(p, q) {
+        if (!p && !q) return true;
+        if (!p || !q || p.val !== q.val) return false;
+
+        const leftIsSame = checkSame(p.left, q.left);
+        const rightIsSame = checkSame(p.right,q.right);
+
+        return leftIsSame && rightIsSame;
+    }
+
+    function dfs(node) {
+        if (node === null || isSub) return;
+
+        dfs(node.left);
+
+        if (node.val === subRoot.val) {
+            if (checkSame(node, subRoot)) isSub = true;
+        }
+
+        dfs(node.right);
+    }
+
+    dfs(root);
+
+    return isSub;
+};

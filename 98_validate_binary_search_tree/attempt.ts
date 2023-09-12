@@ -91,3 +91,59 @@ function isValidBST(root: TreeNode | null): boolean {
     dfs(root, -Infinity, Infinity);
     return isValid;
 };
+
+/****************** Attempt #3 - easy concept, coded quick *****************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+In binary search tree, all nodes in the left subtree of the current node must be smaller than the current node, so the whole left subtree has a max, and that's the current node's value
+
+Forr the current node's right subtree, it must be larger than the current node, so the whole right subtree has a min, and that's the current node's value
+
+If I keep track of the min and max of the current node, I can verify whether it's outside the bounds of what would make a binary search tree
+
+Pseudocode:
+1. Instantiate an isBST var at true
+2. Define a dfs function that takes in a node, a min, and a max
+    // Base case:
+    1. If root is null or isBST is false, return up
+    
+    // Recursive case:
+    2. if the current node's val is smaller than min or greater than max, set isBST to false
+    3. call dfs on the left child, set the current node's val as the max
+    4. call dfs on the right child, set the current node's val as the min
+3. Call the dfs function, giving it root as the node, -Infinity as the min, and Infinity as the max
+4. Return isBST
+
+Time complexity: O(n)
+Space complexity: O(h)
+
+ */
+
+function isValidBST(root: TreeNode | null): boolean {
+    let isBST = true;
+
+    function dfs(node, min, max) {
+        if (node === null || !isBST) return;
+
+        if (node.val <= min || node.val >= max) isBST = false;
+
+        dfs(node.left, min, node.val);
+        dfs(node.right, node.val, max);
+    }
+
+    dfs(root, -Infinity, Infinity);
+
+    return isBST;
+};

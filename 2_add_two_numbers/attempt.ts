@@ -288,3 +288,70 @@ function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | nul
 
     return dummy.next;
 };
+
+/*********************** Attempt #4 Good, took a bit longer ~30 minutes ***************************/
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+
+I could treat this as addition using longform/pen and paper
+
+If I'm adding 342 and 465, it would look like this on paper:
+1
+342
+465
+---
+807
+
+I create 7 first, then 0, then 8 with the 1 carried over from the middle 10 sum
+
+Since I'm returning 708 as a linked list, I would just create the node after doing the addition, then on the next sum, set the node to point to the newly created node. Then, return the head of the sum linked list
+
+Pseudocode:
+1. Instantiate a dummy node
+2. Instantiate a tail node that = dummy node
+3. Instantiate a carry var at 0
+4. While l1 is truthy or l2 is truthy or carry is truthy
+    1. Instantiate an addend1 var at: l1.val OR 0 (if l1 is null)
+    2. Instantiate an addend2 var at: l2.val OR 0 (if l2 is null)
+    3. Instantiate a sum var at (addend1 + addend2 + carry) % 10
+    4. Instantiate a carry var at Math.floor((addend1 + addend2 + carry) / 10)
+    5. Create a node at new ListNode(sum)
+    6. Set tail.next to be the new node
+    7. Set tail to be tail.next
+5. Return dummy.next (head of the sum list)
+
+Time complexity: O(n) - Where n is the length of the longer of the two list parameters
+Space complexity: O(n) - Since we create a new list that is equal to the length of the longer of the two list parameters
+
+ */
+
+function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+    const dummy = new ListNode();
+    let tail = dummy;
+
+    let carry = 0;
+
+    while (l1 || l2 || carry) {
+        const addend1 = l1 ? l1.val : 0;
+        const addend2 = l2 ? l2.val : 0;
+
+        const sum = (addend1 + addend2 + carry) % 10;
+
+        carry = Math.floor((addend1 + addend2 + carry) / 10);
+
+        tail.next = new ListNode(sum);
+        tail = tail.next;
+        l1 = l1 ? l1.next : null;
+        l2 = l2 ? l2.next : null;
+    }
+
+    return dummy.next;
+};
