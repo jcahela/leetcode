@@ -259,3 +259,25 @@ function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
 
     return dummy.next;
 };
+
+/****************** Attempt #5 1 traversal using two node pointers *******************/
+
+function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
+    const dummy = new ListNode(0, head);
+    let l = dummy;
+    let r = dummy;
+
+    while (n > 1) {
+        r = r.next;
+        n -= 1;
+    }
+
+    while (r.next.next) {
+        l = l.next;
+        r = r.next;
+    }
+
+    l.next = l.next.next;
+
+    return dummy.next;
+};
