@@ -181,3 +181,40 @@ function isBalanced(root: TreeNode | null): boolean {
 
     return balanced;
 };
+
+/***************** Attempt #4 - easy *******************/
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.
+
+ */
+
+function isBalanced(root: TreeNode | null): boolean {
+    let balanced = true;
+
+    function dfs(node) {
+        if (node === null) return 0;
+
+        const leftHeight = dfs(node.left);
+        const rightHeight = dfs(node.right);
+
+        if (Math.abs(leftHeight - rightHeight) > 1) balanced = false;
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    dfs(root);
+
+    return balanced;
+};

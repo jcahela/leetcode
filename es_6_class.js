@@ -37,39 +37,77 @@
 
 // console.log(myCar.miles);
 
-class Car {
-  static numCars = 0;
+// class Car {
+//   static numCars = 0;
 
-  constructor(make,model,year,miles = 0) {
-    this.make = make;
-    this.model = model;
-    this.year = year;
-    this.miles = miles;
+//   constructor(make,model,year,miles = 0) {
+//     this.make = make;
+//     this.model = model;
+//     this.year = year;
+//     this.miles = miles;
 
-    Car.numCars += 1;
-  }
+//     Car.numCars += 1;
+//   }
 
-  drive(distance) {
-    this.miles += distance;
-  }
+//   drive(distance) {
+//     this.miles += distance;
+//   }
 
-  static getNumCars() {
-    return Car.numCars;
-  }
-}
+//   static getNumCars() {
+//     return Car.numCars;
+//   }
+// }
 
-console.log(Car.getNumCars());
+// console.log(Car.getNumCars());
 
-const myCar = new Car('Nissan', 'Sentra', 2014);
+// const myCar = new Car('Nissan', 'Sentra', 2014);
 
 
-console.log(myCar.make);
-console.log(myCar.model);
-console.log(myCar.year);
-console.log(myCar.miles);
+// console.log(myCar.make);
+// console.log(myCar.model);
+// console.log(myCar.year);
+// console.log(myCar.miles);
 
-console.log(Car.getNumCars());
+// console.log(Car.getNumCars());
 
-myCar.drive(1000);
+// myCar.drive(1000);
 
-console.log(myCar.miles);
+// console.log(myCar.miles);
+
+/*********** Attempt #4 - easy, second nature ***********/
+
+// class Car {
+//   static numCars = 0;
+
+//   constructor(make, model, year, miles = 0) {
+//     this.make = make;
+//     this.model = model;
+//     this.year = year;
+//     this.miles = miles;
+
+//     Car.numCars += 1;
+//   }
+
+//   drive(distance) {
+//     this.miles += distance;
+//   }
+
+//   static getNumCars() {
+//     return Car.numCars;
+//   }
+
+// }
+
+// console.log(Car.getNumCars());
+
+// const myNewCar = new Car('Nissan', 'Sentra', 2014, 50000);
+
+// console.log(Car.getNumCars());
+// console.log(myNewCar.miles);
+// console.log(myNewCar.make);
+// console.log(myNewCar.model);
+// console.log(myNewCar.year);
+
+// myNewCar.drive(50000);
+
+// console.log(myNewCar.miles);

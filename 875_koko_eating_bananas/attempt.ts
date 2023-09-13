@@ -218,3 +218,34 @@ function minEatingSpeed(piles: number[], h: number): number {
 
     return minimum;
 };
+
+/********* Attempt #3 - understood concept and approach, no prep needed **********/
+
+function minEatingSpeed(piles: number[], h: number): number {
+    let minK = Math.max(...piles);
+    function getHours(k) {
+        let hours = 0;
+        for (const pile of piles) {
+            hours += Math.ceil(pile / k);
+        }
+        return hours;
+    }
+
+    let l = 0;
+    let r = Math.max(...piles);
+
+    while (l <= r) {
+        const m = Math.ceil((l + r) / 2);
+
+        const hours = getHours(m);
+
+        if (hours <= h) {
+            minK = Math.min(minK, m);
+            r = m - 1;
+        } else {
+            l = m + 1;
+        }
+    }
+
+    return minK;
+};

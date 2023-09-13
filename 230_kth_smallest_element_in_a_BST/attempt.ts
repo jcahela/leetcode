@@ -129,3 +129,38 @@ function kthSmallest(root: TreeNode | null, k: number): number {
   dfs(root);
   return kthSmallestNode;
 };
+
+/********************** Attempt #3 - played with undefined value of kthSmallest var *********************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function kthSmallest(root: TreeNode | null, k: number): number {
+  let kthSmallest;
+
+  function inOrderDFS(node) {
+      if (node === null || kthSmallest !== undefined) return;
+
+      inOrderDFS(node.left);
+
+      if (k === 1 && kthSmallest === undefined) kthSmallest = node.val;
+      k -= 1;
+
+      inOrderDFS(node.right);
+  }
+
+  inOrderDFS(root);
+
+  return kthSmallest;
+};
