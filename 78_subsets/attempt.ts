@@ -123,3 +123,55 @@ function subsets(nums: number[]): number[][] {
 
     return output;
 };
+
+/***************** Attempt #4 - good *********************/
+
+/*
+
+                            []
+                [1]                  []
+         [1,2]        [1]       [2]      []
+    [1,2,3] [1,2] [1,3] [1] [2,3] [2] [3] []
+
+Decision tree: add number at i, don't add number at i
+When going to the next level, increment i, then ask for each node at that level, add number at i, don't add number at i
+
+Since there are 2 decisions, and it's making the decision at every i, the overall time complexity would be n^2
+
+Pseudocode:
+1. Instantiate an output array at []
+2. Instantiate a backtrack function that takes in: i, subset
+    // Base case
+    1. If i = n.length, the subset is complete, you're at the leaf node of null, so push a copy of the subset parameter into output array: output.push(...subset)
+    // Recursive case
+    // Decision 1: Add the number at i to the subset, then increment i
+    1. subset.push(nums[i])
+    2. Call backtrack on i + 1 and the new subset
+    // Decision 2: Don't add the number at i to the subset, then increment i
+    3. Pop back out the number that was added to the subset
+    4. Call backtrack on i + 1 and the popped subset
+3. Call backtrack function with i = 0 and subset = []
+4. Return the output array
+
+*/
+
+function subsets(nums: number[]): number[][] {
+    const output: number[][] = [];
+
+    function backtrack(i, subset) {
+        if (i === nums.length) {
+            output.push([...subset]);
+            return;
+        }
+
+        subset.push(nums[i]);
+        backtrack(i + 1, subset);
+
+        subset.pop();
+        backtrack(i + 1, subset);
+    }
+
+    backtrack(0, []);
+
+    return output;
+};

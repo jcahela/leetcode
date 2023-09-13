@@ -72,3 +72,53 @@ function searchMatrix(matrix: number[][], target: number): boolean {
   }
   return false;
 };
+
+/*************** Attempt #2 - easy, double binary search ***************/
+
+/*
+
+
+
+*/
+
+function searchMatrix(matrix: number[][], target: number): boolean {
+
+    let left = 0;
+    let right = matrix.length - 1;
+
+    while (left <= right) {
+        const mid = Math.ceil((left + right) / 2);
+
+        const midArr = matrix[mid];
+
+        const min = midArr[0];
+        const max = midArr[midArr.length - 1];
+
+        if (target < min) {
+            right = mid - 1;
+        } else if (target > max) {
+            left = mid + 1;
+        } else {
+            let l = 0;
+            let r = midArr.length - 1;
+
+            while (l <= r) {
+                const m = Math.ceil((l + r) / 2);
+
+                const midNum = midArr[m];
+
+                if (target < midNum) {
+                    r = m - 1;
+                } else if (target > midNum) {
+                    l = m + 1;
+                } else {
+                    return true;
+                }
+            }
+            break;
+        }
+    }
+
+    return false;
+
+};
