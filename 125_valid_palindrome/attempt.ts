@@ -58,3 +58,50 @@ function isPalindrome(s: string): boolean {
 
   return true;
 };
+
+/**************** Attempt #2 - easy, remembered how to use regex test ****************/
+
+/**
+
+Use Regex to check if a given letter is alphanumeric
+
+\[a-zA-Z0-9]
+
+Then, use two pointers and compare the two characters whenever they are both alphanumeric. Increment left/decrement right if either are non-alphanumeric
+
+Pseudocode:
+1. Instantiate a isAlphanumeric var at /[a-zA-Z0-9]/
+2. Instantiate a left pointer at 0
+3. Instantiate a right pointer at s.length - 1
+4. While l is <= r
+    1. if the char at l is not alphanumeric, increment l
+    2. else if the char at r is not alphanumeric, decrement r
+    3. else (both are alphanumeric)
+        1. compare the char at l lowercased to the char at r lowercased. If they are not the same, return false
+        2. At this point, the two chars are the same, so increment l and decrement r
+5. Return true
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+ */
+ 
+function isPalindrome(s: string): boolean {
+    const isAlphanumeric = /[a-zA-Z0-9]/;
+    let l = 0;
+    let r = s.length - 1;
+
+    while (l < r) {
+        if (!isAlphanumeric.test(s[l])) {
+            l += 1;
+        } else if (!isAlphanumeric.test(s[r])) {
+            r -= 1;
+        } else {
+            if (s[l].toLowerCase() !== s[r].toLowerCase()) return false;
+            l += 1;
+            r -= 1;
+        }
+    }
+
+    return true;
+};

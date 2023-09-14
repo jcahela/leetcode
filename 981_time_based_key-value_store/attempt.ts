@@ -278,3 +278,56 @@ class TimeMap {
  * obj.set(key,value,timestamp)
  * var param_2 = obj.get(key,timestamp)
  */
+
+/********** Attempt #4 - got everything right except I incremented/decremented l and r instead of setting it 1 more/1 less than m ***********/
+
+class TimeMap {
+    dict: object;
+    
+    constructor() {
+        this.dict = {};
+    }
+
+    set(key: string, value: string, timestamp: number): void {
+        this.dict[key] ? this.dict[key].push([timestamp, value]) : this.dict[key] = [[timestamp, value]];
+    }
+
+    get(key: string, timestamp: number): string {
+        if (!this.dict[key]) return "";
+
+        const values = this.dict[key];
+        let largestTimestamp;
+
+        let l = 0;
+        let r = values.length - 1;
+
+        while (l <= r) {
+            const m = Math.ceil((l + r) / 2);
+
+            const ts = values[m][0];
+
+            if (ts < timestamp) {
+                if (!largestTimestamp) {
+                    largestTimestamp = values[m];
+                } else {
+                    largestTimestamp = largestTimestamp[0] < ts ? values[m] : largestTimestamp;
+                }
+                l = m + 1;
+            } else if (ts > timestamp) {
+                r = m - 1;
+            } else {
+                largestTimestamp = values[m];
+                break;
+            }
+        }
+
+        return largestTimestamp ? largestTimestamp[1] : "";
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * var obj = new TimeMap()
+ * obj.set(key,value,timestamp)
+ * var param_2 = obj.get(key,timestamp)
+ */

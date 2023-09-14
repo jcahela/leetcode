@@ -127,3 +127,59 @@ function lengthOfLongestSubstring(s: string): number {
 
     return max;
 };
+
+/*************** Attempt #3 - sliding window, keeping track of whenever a letter has a count more than 2, and dealing with that immediately ***************/
+/*
+
+Use a sliding window and a hashmap
+
+The sliding window can start at 1 character in length
+
+Then, store each character in the hashmap with their count as 1
+
+As soon as I get a character that has a count greater than 1, I increment the left pointer until that letter has a count of 1 again, then it will be a valid window again
+
+Pseudocode:
+1. Instantiate a longest var at 0
+2. Instantiate an l var at 0
+3. Instantiate an r var at 0
+4. Instantiate a counts map at {}
+5. While r < s.length
+    1. If the current letter at r exists in the hashmap, increment by 1, if not set it as a key with a value of 1
+    2. Check if the current letter at r is > 1 in the hashmap, while it is
+        1. subtract 1 from the count of the letter at l
+        2. increment l
+    3. At this point, you should have a window that has only unique characters. Set longest var to the Max between the longest var and the length of the window
+    4. Increment r
+6. Return longest var
+
+Time complexity: O(n)
+Space complexity: O(u) - where u is the number of unique chars in s
+
+*/
+
+//      l
+//            r
+//  0 1 2 3 4 5 6 7
+// "a b c a b c b b"
+function lengthOfLongestSubstring(s: string): number {
+    let longest = 0; // 3
+    let l = 0;
+    let r = 0;
+    const counts = {}; // { 'a': 1, 'b': 1, 'c': 1 }
+
+    while (r < s.length) {
+        counts[s[r]] ? counts[s[r]] += 1 : counts[s[r]] = 1;
+
+        while (counts[s[r]] > 1) {
+            counts[s[l]] -= 1;
+            l += 1;
+        }
+
+        longest = Math.max(longest, r - l + 1);
+
+        r += 1;
+    }
+
+    return longest;
+};
