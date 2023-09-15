@@ -284,3 +284,187 @@ put(1,2) {
     1: MyNode(key = 1, val = 2)
 } capacity: 0 => null
  */
+
+
+
+/************** Attempt #3 - coded everything correctly, except for the constructor of my node class, which fucked everything else up ****************/
+
+/*
+
+In order to keep track of the least and most recently used in order to evict the correct key, I should use a linked list data structure
+
+(LRU) <-> (MRU)
+
+Then, when I put a key-value node, I can make it appear in the MRU side of the list
+
+If that put exceeds capacity, I can evict the node that is leftmost, on the LRU side of the list
+
+(LRU) <-> (2) <-> (MRU)
+
+Pseudocode
+// First, I need to make a LRUNode class that takes in a key, value, prev, and next. The key will be used because I will take the node from the LRU side, and use the key attached to the node to remove that node from a hashmap, which will be used to get the correct node from the list in O(1) time
+1. Create an LRUNode class with the following class vars: key: number | null, val: number | null, prev: LRUNode | null, next: LRUNode | null
+
+// Next, I need to make the constructor of LRUCache create a capacity var, which will be the capacity, and a cache var, which will be the hashmap that holds the key-value pairs of keys and nodes. I also need to add first and last node, which will start pointing at each other, with no key or value
+2. Instantiate a this.capacity instance var at capacity
+3. Instantiate a this.cache instance var at {}
+4. Instantiate a first node at new LRUNode()
+5. Instantiate a last node at new LRUNode()
+6. Point first.next to last
+7. Point last.prev to first
+
+// Then, I need to create helper functions insert and remove, which will be given a node to insert at the end of the list (whenever I need to add a new node to the list, the most recently used one, naturally), and a node to remove at the front of the list (whenever I need to evict the LRU node)
+8. Instantiate a method insert, that takes in a node parameter at LRUNode
+    1. Set last.prev.next to = node
+    2. Set node.next to = last
+    3. Set node.prev to = last.prev
+    4. Set last.prev to = node
+
+9. Instantiate a method remove, that takes in no parameter
+    1. Store first.next in a var node
+    2. Set first.next to be first.next.next
+    3. Set first.next.prev to be first
+    4. Return node
+
+// Next, do the get function
+10. If the key doesn't exist in cache, return -1
+11. Return the val at the key in cache (node)
+
+// Finally, do the put function
+12. First, check if the key exists in the cache
+    1. If it does, then I'm replacing an existing key's value, and don't have to adjust capacity
+    2. Call remove on the val at the key
+    3. Instantiate a node var at new LRUNode(key, value);
+    4. Call insert on the node
+    5. Set the key in the cache to have its value be node
+13. Else (the key doesn't exist in the cache)
+    1. If capacity is 0
+        1. You need to remove the LRU node, remove its key from the cache, and insert the new node, and add the new key to the cache
+        2. Instantiate lru var at this.remove(first.next)
+        3. Remove the key at the cache: delete this.cache[lru.key]
+        3. Set this.cache[key] to be a new LRUNode(key, value)
+        4. Call this.insert(this.cache[key]) (the new node I just created)
+    2. Else (capacity can handle the addition)
+        1. Set this.cache[key] to be new LRUNode(key, value)
+        2. Call this.insert(this.cache[key]) (the new node I just created)
+        3. Subtract 1 from capacity
+
+*/
+
+class LRUNode {
+    key: number | null;
+    val: number | null;
+    prev: LRUNode | null;
+    next: LRUNode | null;
+
+    constructor(key?: number | null, val?: number | null, prev?: LRUNode | null, next?: LRUNode | null) {
+        this.key = key === undefined ? null : key;
+        this.val = val === undefined ? null : val;
+        this.prev = prev === undefined ? null : prev;
+        this.next = next === undefined ? null : next;
+    }
+}
+
+class LRUCache {
+    capacity: number;
+    cache: object;
+    first: LRUNode;
+    last: LRUNode;
+    constructor(capacity: number) {
+        this.capacity = capacity;
+        this.cache = {};
+        this.first = new LRUNode();
+        this.last = new LRUNode();
+
+        this.first.next = this.last;
+        this.last.prev = this.first;
+    }
+
+/*
+8. Instantiate a method insert, that takes in a node parameter at LRUNode
+    1. Set last.prev.next to = node
+    2. Set node.next to = last
+    3. Set node.prev to = last.prev
+    4. Set last.prev to = node
+*/
+    insert(node: LRUNode) {
+        node.next = this.last;
+        node.prev = this.last.prev;
+        node.prev.next = node;
+        this.last.prev = node;
+        return node;
+    }
+
+/*
+9. Instantiate a method remove, that takes in no parameter
+    1. Store first.next in a var node
+    2. Set first.next to be first.next.next
+    3. Set first.next.prev to be first
+    4. Return node
+*/
+
+    remove(node: LRUNode) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        return node;
+    }
+/*
+// Next, do the get function
+10. If the key doesn't exist in cache, return -1
+11. If it does exist in the cache, it must be removed from whatever spot it's in, and placed in the rightmost side of the list
+11. Return the val at the key in cache (node)
+*/
+    get(key: number): number {
+        if (!this.cache[key]) return -1;
+        const node = this.remove(this.cache[key]);
+        this.insert(node);
+        return node.val;
+    }
+/*
+// Finally, do the put function
+12. First, check if the key exists in the cache
+    1. If it does, then I'm replacing an existing key's value, and don't have to adjust capacity
+    2. Call remove
+    3. Instantiate a node var at new LRUNode(key, value);
+    4. Call insert on the node
+    5. Set the key in the cache to have its value be node
+13. Else (the key doesn't exist in the cache)
+    1. If capacity is 0
+        1. You need to remove the LRU node, remove its key from the cache, and insert the new node, and add the new key to the cache
+        2. Instantiate lru var at this.remove(first.next)
+        3. Remove the key at the cache: delete this.cache[lru.key]
+        3. Set this.cache[key] to be a new LRUNode(key, value)
+        4. Call this.insert(this.cache[key]) (the new node I just created)
+    2. Else (capacity can handle the addition)
+        1. Set this.cache[key] to be new LRUNode(key, value)
+        2. Call this.insert(this.cache[key]) (the new node I just created)
+        3. Subtract 1 from capacity
+*/
+    put(key: number, value: number): void {
+        if (this.cache[key]) { // update the value of the key if the key exists
+            this.remove(this.cache[key]); // Remove the node being replaced from the linked list
+            const node = new LRUNode(key, value); // Create the node being inserted
+            this.cache[key] = node; // Set the key in the cache to be the newly created node
+            this.insert(node); // Insert the newly created node to the linked list
+        } else { // the key doesn't exist in the cache
+            if (this.capacity === 0) { // there's no capacity for the node, so I need to remove the LRU node
+                const lru = this.remove(this.first.next);
+                delete this.cache[lru.key];
+                const node = new LRUNode(key, value);
+                this.cache[key] = node;
+                this.insert(node);
+            } else { // there is capacity for the node, so just add it to the cache and insert it into the list
+                this.cache[key] = new LRUNode(key, value);
+                this.insert(this.cache[key]);
+                this.capacity -= 1;
+            }
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
