@@ -452,3 +452,129 @@ function minWindow(s: string, t: string): string {
 
     return minSubstringIndices.length === 0 ? "" : s.slice(minSubstringIndices[0], minSubstringIndices[1] + 1);
 };
+
+/****************** Attempt #4 - concept correct, bugs due to start r off at the end of s instead of the end of t smh ******************/
+
+/*
+
+I have to know that every character in t (including duplicates) is in the window S in order to know if the window is valid
+
+While the window is valid, I increment l, and replace the minimum var with the newly shortened, still valid window
+
+I continue this until the window is no longer valid, then increment r until the window is valid
+
+t = "ABC"
+
+ l
+     r
+ 0 1 2 3 4 5 6 7 8 9 10 11 12
+"A D O B E C O D E B A  N  C"
+
+In order to find that the window is valid, I need to be able to compare its character and counts to the counts of t
+
+I could have a tCounts hashmap:
+
+{
+    'A': 1,
+    'B': 1,
+    'C': 1
+}
+
+and an sCounts hashmap:
+
+{
+    'A': 1,
+    'B': 0,
+    'C': 0
+}
+
+For a given t, the number of matches I should have between tCounts and sCounts is the number of unique letters in t, so 3 for the above
+
+What I start with is a match of 1, not 3, so I know it's invalid
+
+As I increment r, how would I know whether I gained a match?
+    - If the new letter at r is in sCounts, and if the letter at r in sCounts is now = the letter at r in tCounts (if it's now > the letter at r in tCounts, then I already had a match)
+
+As I increment l, how would I know whether I lost a match?
+    - If after subtracting the letter at l, the letter at l in sCounts is now < the letter at l in tCounts (if it's still = or > the number in tCounts, then I already had a match)
+
+So, I need to check in each iteration if matches I have = the matches I need, if so I'm in a valid window, and I can replace minimum with the indices of the current window. Then, while matches I have = matches I need, I increment l, and do the check, and decrement matches I have as appropriate, until the window's invalid
+
+After the while loop, I'm in an invalid loop, so I increment r, and add the count to sCounts if the new letter at r exists in sCounts, and add to matches I have if appropriate, then continue the loop
+
+Pseudocode:
+1. Instantiate a tCounts hashmap at {}
+2. Instantiate an sCounts hashmap at {}
+3. Iterate over t using a normal i loop
+    1. If the current char at i in t is in tCounts, add 1 to it, else set it = 1
+    2. Set the letter at i in t to sCounts, but set it equal to 0
+4. Iterate over t again using a normal i loop
+    1. This time, check if the letter in S at i is in sCounts, if so increment by 1 (this should get you the count of the first window that has the letters in tCounts, and their counts in that window)
+5. Instantiate a matches var at 0
+6. Instantiate a matchesNeeded var at Object.keys(tCounts).length
+7. Iterate over the keys of sCounts
+    1. If the letter in sCounts is >= the letter in tCounts, add 1 to the matches var
+// At this point, you should have an sCounts map, a tCounts map, both with the same keys, and the counts of these keys in both the t string and the first window. You should also have the number of matches you already have, and the matches you need, stored
+8. Instantiate an l pointer at 0
+9. Instantiate an r pointer at t.length - 1
+10. Instantiate a minimumWindow var at [-Infinity, Infinity]
+11. While r < s.length
+    1. while matches === matchesNeeded
+        1. This is a valid window, so set minimumWindow to the current window's l and r if the difference between r and l is smaller than the difference between minimumWindow[1] and minimumWindow[0]
+        2. Then, check if the letter at l in s is in sCounts
+            1. If it is, subtract it from sCounts
+            2. If the letter at l in s in sCounts is now < letter at l in s in tCounts, you've lost a match
+                1. decrement matches by 1
+        3. increment l
+    2. At this point, you have an invalid window, so increment r
+    3. If the letter at the new r is in sCounts, increment that letter in sCounts by 1
+    4. If the letter at r in sCounts is now = the letter at r in tCounts, you gained a match
+        1. increment matches by 1
+12. if minimumWindow[1] - minimumWindow[0] === Infinity, return "", else return s.slice(minimumWindow[0], minimumWindow[1] + 1) - since it's exclusive for the second argument in .slice()
+
+Time complexity: O(n) - sliding window
+Space complexity: O(u) - Where u is the number of unique keys in t
+
+*/
+function minWindow(s: string, t: string): string {
+    const tCounts = {};
+    const sCounts = {};
+    for (let i = 0; i < t.length; i += 1) {
+        tCounts[t[i]] ? tCounts[t[i]] += 1 : tCounts[t[i]] = 1;
+        sCounts[t[i]] = 0;
+    }
+
+    for (let i = 0; i < t.length; i += 1) {
+        if (sCounts.hasOwnProperty(s[i])) sCounts[s[i]] += 1;
+    }
+
+    let matches = 0;
+    const matchesNeeded = Object.keys(tCounts).length;
+
+    for (const uniqueLetter of Object.keys(sCounts)) {
+        if (sCounts[uniqueLetter] >= tCounts[uniqueLetter]) matches += 1;
+    }
+
+    let l = 0;
+    let r = t.length - 1;
+    let minimumWindow = [-Infinity, Infinity];
+
+    while (r < s.length) {
+        console.log(matches);
+        while (matches === matchesNeeded) {
+            if ((r - l) < (minimumWindow[1] - minimumWindow[0])) minimumWindow = [l, r];
+            if (sCounts.hasOwnProperty(s[l])) {
+                sCounts[s[l]] -= 1;
+                if (sCounts[s[l]] === tCounts[s[l]] - 1) matches -= 1;
+            }
+            l += 1;
+        }
+        r += 1;
+        if (sCounts.hasOwnProperty(s[r])) {
+            sCounts[s[r]] += 1;
+            if (sCounts[s[r]] === tCounts[s[r]]) matches += 1;
+        }
+    }
+    console.log(minimumWindow);
+    return minimumWindow[1] - minimumWindow[0] === Infinity ? "" : s.slice(minimumWindow[0], minimumWindow[1] + 1);
+};
