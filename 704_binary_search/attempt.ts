@@ -71,3 +71,24 @@ function search(nums: number[], target: number): number {
 
   return -1;
 };
+
+/****************** Attempt #2 - easy, basic binary search *********************/
+
+function search(nums: number[], target: number): number {
+    let l = 0;
+    let r = nums.length - 1;
+
+    while (l <= r) {
+        const m = Math.ceil((l + r) / 2);
+
+        if (target < nums[m]) {
+            r = m - 1;
+        } else if (target > nums[m]) {
+            l = m + 1;
+        } else {
+            return m;
+        }
+    }
+
+    return -1;
+};

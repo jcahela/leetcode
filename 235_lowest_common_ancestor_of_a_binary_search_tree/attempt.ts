@@ -141,3 +141,66 @@ function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: Tree
 
     return node;
 }
+
+/******************* Attempt #4 - easy, separated out dfs from var that holds the answer, I seem to gravitate towards this style of solving dfs problems, it makes more sense in my head ********************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+
+Searching for the LCA of two nodes, if I'm on a specific node, that node would be an LCA if:
+    1. It's equal to one of the two nodes
+    2. It's between both the nodes
+
+If I'm not on the LCA with my current node, I would need to know which direction to go from my current node:
+    1. If the current node is smaller than both p and q, I need to find a larger node, so I go right
+    2. If the current node is larger than both p and q, I need to find a smaller node, so I go left
+
+Pseudocode:
+1. Instantiate an lca var that starts at root
+2. Define a dfs function that takes in node
+    // Base case
+    1. If node is null or lca is truthy, return up
+    // Recursive case
+    2. If the current node is < both p and q
+        1. Call dfs on node.right
+    3. Else if the current node is > both p and q
+        1. Call dfs on node.left
+    4. Else (the node either equals p or q, or is between p and q, in either case, it's the lca)
+        1. set lca = node
+3. Call dfs function on root
+4. Return lca var
+
+Time complexity: O(n)
+Space complexity: O(h)
+
+ */
+function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: TreeNode | null): TreeNode | null {
+    let lca;
+
+    function dfs(node: TreeNode | null) {
+        if (node === null || lca) return;
+
+        if (node.val < p.val && node.val < q.val) {
+            dfs(node.right);
+        } else if (node.val > p.val && node.val > q.val) {
+            dfs(node.left);
+        } else {
+            lca = node;
+        }
+    }
+
+    dfs(root);
+
+    return lca;
+}

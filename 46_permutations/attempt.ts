@@ -58,3 +58,61 @@ function permute(nums: number[]): number[][] {
 
   return res;
 };
+
+/******************* Attempt #2 - solved without help, need to think more on the concept itself *********************/
+
+/*
+
+                         []
+                [1]        [2]          [3]
+        [1,2]   [1,3]    [2,1]   [2,3]   [3,1]     [3,2]
+    [1,2,3]   [1,3,2]    [2,1,3]   [2,3,1] [3,1,2]  [3,2,1]
+
+Each level down on the decision tree, I add a different num at i to the array I pass down to the next recursive call
+
+Once I pass a number into the permutation I'm building, that number is no longer considered in nums, so I would have to take it out of a nums I'm manipulating, and pass that along with the permutation, so the shortened nums can be iterated on too in the next recursive call
+
+The base case would be when the permutation's length is equal nums length, that's when I'd push a copy of it to an output
+
+The recursive case would be me iterating through the nums I'm given as a parameter (shortened nums)
+    At each iteration, I put the current number into the permutation, then pass an array that has that number taken out
+
+Pseudocode:
+1. Instantiate an output array at []
+2. Define a backtrack function that takes in perm: number[], currNums: number[]
+    // Base case: the permutation parameter's length is equal to nums.length
+    1. If perm.length === nums.length
+        1. output.push([...perm])
+        2. return;
+    // Recursive case: iterate through the nums parameter and make the recursive call at each iteration
+    2. For loop through currNums
+        1. Call backtrack on perm with the current number pushed onto perm, and the currNum array with the current number taken out
+3. Call backtrack on perm = [] and currNums = nums
+4. Return the output array
+
+Time complexity: O(n!) - Since I'm making n decisions the first level, which multiplies by n - 1 decisions the next level, and n- 2 the next level, until you reach 0, which is factorial in nature
+
+*/
+
+function permute(nums: number[]): number[][] {
+    const output = [];
+
+    function backtrack(perm: number[], currNums: number[]) {
+        if (perm.length === nums.length) {
+            output.push([...perm]);
+            return;
+        }
+
+        for (let i = 0; i < currNums.length; i += 1) {
+            const numsCopy = [...currNums];
+            numsCopy.splice(i, 1)
+            perm.push(currNums[i]);
+            backtrack(perm, numsCopy);
+            perm.pop()
+        }
+    }
+
+    backtrack([], nums);
+
+    return output;
+};
