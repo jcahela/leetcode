@@ -116,3 +116,62 @@ function permute(nums: number[]): number[][] {
 
     return output;
 };
+
+/********************** Attempt #3 - solved, understood concept ************************/
+
+/*
+
+                             []
+                    [1]       [2]           [3] *n
+        [1,2] [1,3]     [2,1]    [2,3]     [3,1]     [3,2] *n-1
+[1,2,3] [1,3,2]   [2,1,3]     [2,3,1]   [3,1,2]   [3,2,1] *n-2
+
+By iterating through each num in nums at each decision tree level, I can create every permutation of the nums arrays
+
+The first level is n
+The second level multiplies the number of nodes by n-1
+The third level multiplies the number of nodes by n-2
+and so on
+
+The time complexity would therefore by n!, or n factorial
+The space complexity, n, since that would be the number of levels deep I'd need to go to create n! number of nodes at the leaf nodes
+
+Pseudocode:
+1. Instantiate an output array at []
+2. Define a backtrack function that takes in: permutation, currNums
+    // Base case
+    1. If permutation.length === nums.length (permutation I'm looking at is as long as nums, I know it's a full permutation)
+        1. Push a copy of the permutation into the output array, then return
+    // Recursive case
+    2. Iterate over the currNums array
+        1. At each iteration, make a copy of currNums at currNumsCopy
+        2. Push the current number at i into the permutation array
+        3. Remove the current number at i from the currNumsCopy
+        4. Call permute on the new permutation array and currNumsCopy
+        5. Once that recursion is done, pop the last pushed number from the permutation array, and continue the iterations
+3. Call backtrack with permutation = [], currNums = nums
+4. Return output array
+
+*/
+
+function permute(nums: number[]): number[][] {
+    const output: number[][] = [];
+    function backtrack(permutation: number[], currNums: number[]) {
+        if (permutation.length === nums.length) {
+            output.push([...permutation]);
+            return;
+        }
+
+        for (let i = 0; i < currNums.length; i += 1) {
+            const currNumsCopy = [...currNums];
+            permutation.push(currNums[i]);
+            currNumsCopy.splice(i, 1);
+            backtrack(permutation, currNumsCopy);
+            permutation.pop();
+        }
+    }
+
+    backtrack([], nums);
+
+    return output;
+};
