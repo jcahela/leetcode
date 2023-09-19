@@ -122,3 +122,72 @@ function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
 
     return node;
 };
+
+
+/*********************** Attempt #4 - knew approach, but was rusty and slow on understanding the approach intuitively, still figured out the correct answer *************************/
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+
+WIth the preorder array, I know the first node is the root node
+
+With the inorder array, I know which nodes are to the left and right of the root node
+
+First, I know that the 3 in the preorder array is the root of the tree
+
+Every number before 3 in inorder would be in 3's left subtree, and every number after 3 in inorder would be in 3's right subtree
+
+I could recurse down and create nodes using dfs, at the base when there's no more nodes to create in preorder, I could return the node I created to attach to the previous node
+
+root = 3
+leftInorder would then be = [9]
+leftPreorder would follow the number of items in leftInorder = [3]
+
+
+node created: (3)
+node left subtree:
+    - preorder: [9]
+    - inorder: [9]
+
+    node created: (9)
+    node left subtree:
+        - preorder: []
+        - inorder: []
+    node right subtree:
+        - preorder: []
+        - inorder: []
+
+node right subtree:
+    - preorder: [20, 15, 7]
+    - inorder: [15, 20, 7]
+
+    node created: (20)
+    node left subtree
+        - preorder: [15]
+        -inorder: [15]
+ */
+
+function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
+    if (!preorder.length || !inorder.length) {
+        return null;
+    }
+
+    const newNode = new TreeNode(preorder[0]);
+
+    const rootIndex = inorder.indexOf(preorder[0]);
+
+    newNode.left = buildTree(preorder.slice(1, rootIndex + 1), inorder.slice(0, rootIndex));
+    newNode.right = buildTree(preorder.slice(rootIndex + 1, preorder.length), inorder.slice(rootIndex + 1, inorder.length));
+
+    return newNode;
+};
