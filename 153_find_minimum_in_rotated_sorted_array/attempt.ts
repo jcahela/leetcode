@@ -190,3 +190,58 @@ function findMin(nums: number[]): number {
     }
     return min;
 };
+
+/*************************** Attempt #4 - good, remembered snippets of various previous solutions, arrived at answer though failed twice on submission before getting the correct one *****************************/
+
+/*
+
+min = 0;
+
+ l
+       m  
+             r
+[0,1,2,4,5,6,7]
+
+min = 0;
+
+         l
+           m  
+             r
+[4,5,6,7,0,1,2]
+
+min = 1;
+
+       l
+         m  
+         r
+[3,4,5,1,2]
+
+
+l
+   m
+   r
+[2,1]
+
+*/
+
+function findMin(nums: number[]): number {
+    let l = 0;
+    let r = nums.length - 1;
+    let min = Infinity;
+
+    while (l <= r) {
+        const m = Math.ceil((l + r) / 2);
+
+        if (nums[l] < nums[r]) min = Math.min(min, nums[l]);
+
+        if (nums[l] <= nums[m]) {
+            min = Math.min(min, nums[l]);
+            l = m + 1;
+        } else {
+            min = Math.min(min, nums[m])
+            r = m - 1;
+        }
+    }
+
+    return min;
+};
