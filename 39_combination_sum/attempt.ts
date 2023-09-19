@@ -48,3 +48,44 @@ function combinationSum(candidates: number[], target: number): number[][] {
 
     return output;
 };
+
+
+/******************* Attempt #3 - understood approach and method of coding out *********************/
+
+/*
+
+                                                           []
+                                                    [2]
+                                                [2,2]
+                                            [2,2,2] [2,2,3]
+                        leaf node ->   [2,2,2,2]
+
+*/
+
+/**
+ * @param {number[]} candidates
+ * @param {number} target
+ * @return {number[][]}
+ */
+var combinationSum = function(candidates, target) {
+    const output = [];
+
+    function backtrack(curr, i, sum) {
+        if (sum > target || i === candidates.length) return;
+        if (sum === target) {
+            console.log(curr, sum);
+            output.push([...curr]);
+            return;
+        }
+
+        curr.push(candidates[i]);
+        backtrack(curr, i, sum + candidates[i]);
+
+        curr.pop()
+        backtrack(curr, i + 1, sum);
+    }
+
+    backtrack([], 0, 0);
+
+    return output;
+};
