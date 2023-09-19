@@ -79,3 +79,44 @@ function subsetsWithDup(nums: number[]): number[][] {
 
   return res;
 };
+
+/**************** Attempt #2 - forgot method, but had the right approach (find a way to not create a branch where there's just as many duplicates as a previously visited branch) *********************/
+
+/*
+[1,2,2]
+
+                                      []
+                                [1]         []
+                        [1,2]    [1]     [2]        []
+                    [1,2,2]    [1,2]      [1] [2,2] [2]   []
+
+*/
+
+function subsetsWithDup(nums: number[]): number[][] {
+    const sortedNums = nums.sort((a,b) => a - b);
+    const output = [];
+
+    function backtrack(i, subset) {
+        if (i === sortedNums.length) {
+            output.push([...subset]);
+            return;
+        }
+
+
+        subset.push(sortedNums[i]);
+
+        backtrack(i + 1, subset);
+
+        subset.pop();
+
+        while (i + 1 < sortedNums.length && nums[i] === nums[i + 1]) {
+            i += 1; // This gets me to the last duplicate
+        }
+
+        backtrack(i + 1, subset); // Still do i + 1 so you land on the index after the last duplicate (either a different number, or the end of the array)
+    }
+
+    backtrack(0, []);
+
+    return output;
+};
