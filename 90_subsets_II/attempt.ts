@@ -120,3 +120,42 @@ function subsetsWithDup(nums: number[]): number[][] {
 
     return output;
 };
+
+/****************** Attempt #3 - remembered approach and decision needing to be made ******************/
+
+/*
+
+Sort nums first
+
+One branch - contains a number and all its duplicates (at least 1 of the number)
+
+Other branch - contains none of a number and its duplicates (skips them, avoids duplicate subsets)
+
+*/
+
+function subsetsWithDup(nums: number[]): number[][] {
+    nums.sort((a, b) => a - b);
+    const output = [];
+
+    function dfs(i, curr) {
+        if (i === nums.length) {
+            output.push([...curr]);
+            return;
+        }
+
+        curr.push(nums[i]);
+        dfs(i + 1, curr);
+
+        curr.pop();
+
+        while (i + 1 < nums.length && nums[i] === nums[i + 1]) {
+            i += 1;
+        }
+
+        dfs(i + 1, curr);
+    }
+
+    dfs(0, []);
+
+    return output;
+};
